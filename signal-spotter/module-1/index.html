@@ -1,0 +1,724 @@
+<style>:root {
+  --g-dark:    #1A3A2A;
+  --g-mid:     #1D9E75;
+  --g-light:   #E1F5EE;
+  --g-sand:    #F5F0E8;
+  --g-warm:    #C8B89A;
+  --g-text:    #1C1C1A;
+  --g-muted:   #5A5A56;
+  --g-subtle:  #8A8A84;
+  --g-border:  #D8D4C8;
+  --g-white:   #FFFFFF;
+  --g-amber:   #FAEEDA;
+  --g-amber-t: #633806;
+  --g-amber-b: #BA7517;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: Georgia, 'Times New Roman', serif;
+  background: var(--g-sand);
+  color: var(--g-text);
+  line-height: 1.7;
+  font-size: 15px;
+}
+@media print {
+  body { background: #fff; font-size: 11pt; }
+  .no-print { display: none !important; }
+  .hero { background: #1A3A2A !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .expand-body { display: block !important; }
+}
+/* ── Page wrap ── */
+.page-wrap { max-width: 780px; margin: 0 auto; padding: 0 0 70px; }
+/* ── Hero header ── */
+.hero {
+  background: var(--g-dark);
+  color: #fff;
+  padding: 36px 40px 32px;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 70% 80% at 100% 0%, rgba(29,158,117,.15) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 60% at 0% 100%, rgba(200,184,154,.08) 0%, transparent 55%);
+  pointer-events: none;
+}
+.hero-inner { position: relative; z-index: 1; }
+.hero-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 28px;
+}
+.brand-name {
+  font-size: 13px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--g-warm);
+  font-weight: normal;
+}
+.course-tag {
+  font-size: 11px;
+  font-weight: bold;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  background: rgba(255,255,255,.12);
+  color: var(--g-warm);
+  padding: 4px 13px;
+  border-radius: 20px;
+}
+.hero-eyebrow {
+  font-size: 11px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.45);
+  margin-bottom: 10px;
+}
+.hero-title {
+  font-size: clamp(28px, 5vw, 40px);
+  font-weight: normal;
+  color: #fff;
+  letter-spacing: -.02em;
+  line-height: 1.15;
+  margin-bottom: 14px;
+}
+.hero-title em {
+  font-style: italic;
+  color: var(--g-warm);
+}
+.hero-subtitle {
+  font-size: 15px;
+  color: rgba(255,255,255,.65);
+  max-width: 540px;
+  line-height: 1.7;
+  margin-bottom: 28px;
+}
+/* Phase strip inside hero */
+.phase-strip {
+  display: flex;
+  gap: 0;
+  margin-top: 24px;
+  border-top: 1px solid rgba(255,255,255,.1);
+  padding-top: 20px;
+}
+.phase-item {
+  flex: 1;
+  padding: 0 16px 0 0;
+  border-right: 1px solid rgba(255,255,255,.1);
+  position: relative;
+}
+.phase-item:first-child { padding-left: 0; }
+.phase-item:last-child { border-right: none; padding-right: 0; }
+.phase-num {
+  font-size: 10px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.3);
+  margin-bottom: 4px;
+}
+.phase-item.current .phase-num { color: var(--g-warm); }
+.phase-name {
+  font-size: 13px;
+  color: rgba(255,255,255,.4);
+  font-family: Georgia, serif;
+  line-height: 1.3;
+}
+.phase-item.current .phase-name { color: #fff; font-weight: normal; }
+.phase-indicator {
+  display: inline-block;
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.2);
+  margin-bottom: 6px;
+}
+.phase-item.current .phase-indicator { background: var(--g-mid); }
+/* ── Content area ── */
+.content { padding: 0 40px; }
+/* ── Opening message ── */
+.opening {
+  background: var(--g-white);
+  border-radius: var(--radius-lg);
+  padding: 32px 34px;
+  margin-top: 32px;
+  border: 1px solid var(--g-border);
+  position: relative;
+}
+.opening::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 4px;
+  height: 100%;
+  background: var(--g-mid);
+  border-radius: var(--radius-lg) 0 0 var(--radius-lg);
+}
+.opening-label {
+  font-size: 10px;
+  font-weight: bold;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--g-mid);
+  margin-bottom: 14px;
+}
+.opening p {
+  font-size: 15px;
+  color: var(--g-muted);
+  line-height: 1.8;
+  margin-bottom: 14px;
+}
+.opening p:last-child { margin-bottom: 0; }
+.opening p strong { color: var(--g-text); }
+/* ── Section dividers ── */
+.section-label {
+  font-size: 10px;
+  font-weight: bold;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--g-subtle);
+  margin: 36px 0 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.section-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--g-border);
+}
+/* ── How it works grid ── */
+.how-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+.how-card {
+  background: var(--g-white);
+  border: 1px solid var(--g-border);
+  border-radius: var(--radius-md);
+  padding: 20px 20px;
+}
+.how-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--g-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px;
+  flex-shrink: 0;
+}
+.how-icon svg { width: 16px; height: 16px; }
+.how-title {
+  font-size: 14px;
+  font-weight: normal;
+  color: var(--g-text);
+  margin-bottom: 7px;
+  font-family: Georgia, serif;
+  line-height: 1.3;
+}
+.how-desc {
+  font-size: 13px;
+  color: var(--g-muted);
+  line-height: 1.65;
+}
+/* ── Save notice ── */
+.save-notice {
+  background: var(--g-amber);
+  border: 1px solid var(--g-amber-b);
+  border-radius: var(--radius-md);
+  padding: 16px 20px;
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  margin-bottom: 8px;
+}
+.save-notice-icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  margin-top: 2px;
+  color: var(--g-amber-b);
+}
+.save-notice-text { font-size: 13.5px; color: var(--g-amber-t); line-height: 1.65; }
+.save-notice-text strong { display: block; margin-bottom: 3px; font-size: 14px; }
+/* ── Expandable sections ── */
+.expand-block {
+  background: var(--g-white);
+  border: 1px solid var(--g-border);
+  border-radius: var(--radius-md);
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+.expand-trigger {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 20px;
+  cursor: pointer;
+  user-select: none;
+  transition: background .12s;
+}
+.expand-trigger:hover { background: #fafaf7; }
+.expand-icon-wrap {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--g-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.expand-icon-wrap svg { width: 13px; height: 13px; color: var(--g-mid); }
+.expand-title {
+  flex: 1;
+  font-size: 14px;
+  color: var(--g-text);
+  font-family: Georgia, serif;
+}
+.expand-caret {
+  width: 16px;
+  height: 16px;
+  color: var(--g-border);
+  flex-shrink: 0;
+  transition: transform .2s;
+}
+.expand-block.is-open .expand-caret { transform: rotate(180deg); }
+.expand-block.is-open .expand-icon-wrap { background: var(--g-mid); }
+.expand-block.is-open .expand-icon-wrap svg { color: #fff; }
+.expand-body {
+  display: none;
+  padding: 0 20px 20px;
+  border-top: 1px solid var(--g-border);
+}
+.expand-block.is-open .expand-body { display: block; }
+.expand-body p {
+  font-size: 13.5px;
+  color: var(--g-muted);
+  line-height: 1.75;
+  padding-top: 16px;
+  margin-bottom: 12px;
+}
+.expand-body p:last-child { margin-bottom: 0; }
+.expand-body p strong { color: var(--g-text); }
+.expand-example {
+  background: var(--g-sand);
+  border: 1px dashed var(--g-border);
+  border-radius: var(--radius-sm);
+  padding: 13px 15px;
+  margin-top: 12px;
+}
+.expand-example-label {
+  font-size: 10px;
+  font-weight: bold;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--g-subtle);
+  margin-bottom: 6px;
+}
+.expand-example p {
+  font-size: 13px;
+  color: var(--g-muted);
+  font-style: italic;
+  line-height: 1.65;
+  padding-top: 0;
+  margin-bottom: 0;
+}
+.expand-steps { list-style: none; margin-top: 14px; }
+.expand-steps li {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--g-border);
+  font-size: 13.5px;
+  color: var(--g-muted);
+  line-height: 1.6;
+}
+.expand-steps li:last-child { border-bottom: none; }
+.step-num {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--g-mid);
+  color: #fff;
+  font-size: 11px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+/* ── Module roadmap ── */
+.roadmap-intro {
+  font-size: 13.5px;
+  color: var(--g-muted);
+  line-height: 1.75;
+  margin-bottom: 20px;
+}
+.roadmap-intro strong { color: var(--g-text); }
+.module-block {
+  background: var(--g-white);
+  border: 1px solid var(--g-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  margin-bottom: 14px;
+}
+.module-header {
+  background: var(--g-dark);
+  padding: 16px 22px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.module-num-badge {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 2px solid rgba(255,255,255,.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  color: #fff;
+  flex-shrink: 0;
+  font-family: Georgia, serif;
+}
+.module-header-text {}
+.module-header-label {
+  font-size: 10px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--g-warm);
+  margin-bottom: 3px;
+}
+.module-header-name {
+  font-size: 16px;
+  font-weight: normal;
+  color: #fff;
+  font-family: Georgia, serif;
+}
+.module-desc {
+  padding: 16px 22px 8px;
+  font-size: 13.5px;
+  color: var(--g-muted);
+  line-height: 1.7;
+  border-bottom: 1px solid var(--g-border);
+}
+.section-cards { padding: 14px 22px 18px; display: flex; flex-direction: column; gap: 10px; }
+.section-card {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  background: var(--g-sand);
+  border: 1px solid var(--g-border);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+}
+.section-card-num {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--g-light);
+  border: 1px solid #B8E4D4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: bold;
+  color: #085041;
+  flex-shrink: 0;
+  margin-top: 1px;
+  font-family: Georgia, serif;
+}
+.section-card-body {}
+.section-card-title {
+  font-size: 14px;
+  color: var(--g-text);
+  margin-bottom: 4px;
+  font-family: Georgia, serif;
+  font-weight: normal;
+}
+.section-card-desc {
+  font-size: 13px;
+  color: var(--g-muted);
+  line-height: 1.6;
+}
+.section-card-count {
+  font-size: 11px;
+  color: var(--g-subtle);
+  margin-top: 5px;
+  font-style: italic;
+}
+/* ── Begin panel ── */
+.begin-panel {
+  background: var(--g-dark);
+  border-radius: var(--radius-lg);
+  padding: 28px 32px;
+  margin-top: 8px;
+  text-align: center;
+}
+.begin-panel-title {
+  font-size: 20px;
+  font-weight: normal;
+  color: #fff;
+  font-family: Georgia, serif;
+  margin-bottom: 10px;
+  letter-spacing: -.01em;
+}
+.begin-panel-sub {
+  font-size: 14px;
+  color: rgba(255,255,255,.6);
+  line-height: 1.65;
+  max-width: 440px;
+  margin: 0 auto 22px;
+}
+.begin-instruction {
+  background: rgba(255,255,255,.08);
+  border: 1px solid rgba(255,255,255,.15);
+  border-radius: var(--radius-md);
+  padding: 14px 18px;
+  font-size: 13.5px;
+  color: rgba(255,255,255,.75);
+  line-height: 1.65;
+  text-align: left;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+.begin-arrow {
+  font-size: 18px;
+  flex-shrink: 0;
+  margin-top: 1px;
+  color: var(--g-mid);
+}
+/* ── Footer ── */
+.footer {
+  text-align: center;
+  padding: 28px 40px 0;
+  font-size: 12px;
+  color: var(--g-subtle);
+  font-family: Georgia, serif;
+  border-top: 1px solid var(--g-border);
+  margin-top: 40px;
+}
+.footer strong { color: var(--g-muted); }
+/* ── Responsive ── */
+@media (max-width: 560px) {
+  .hero { padding: 28px 22px 24px; }
+  .content { padding: 0 22px; }
+  .how-grid { grid-template-columns: 1fr; }
+  .hero-title { font-size: 26px; }
+  .phase-strip { gap: 0; }
+  .phase-item { padding: 0 10px 0 0; }
+  .phase-name { font-size: 11.5px; }
+  .opening { padding: 24px 22px; }
+  .begin-panel { padding: 24px 20px; }
+  .footer { padding-left: 22px; padding-right: 22px; }
+}</style>
+<div class="page-wrap"><!-- ══ HERO ══ -->
+  <div class="hero">
+    <div class="hero-inner">
+      <div class="hero-top">
+        <span class="brand-name">Genovean</span> 
+        <span class="course-tag">Course 1 · Phase 1</span>
+      </div>
+      <p class="hero-eyebrow">The Quiet Shift · Awareness Before Urgency</p>
+      <h1 class="hero-title">Seeing It 
+        <em>Clearly</em>
+      </h1>
+      <p class="hero-subtitle">A structured toolkit for noticing what is changing in your parent's world,&nbsp; before you need to act on it. Twenty-five tools, one module at a time, at a pace that works for you.</p>
+<!-- Three-phase position strip -->
+      <div class="phase-strip">
+        <div class="phase-item current">
+          <div class="phase-indicator">&nbsp;</div>
+          <p class="phase-num">Phase 1</p>
+          <p class="phase-name">Awareness Before Urgency</p>
+        </div>
+        <div class="phase-item">
+          <div class="phase-indicator">&nbsp;</div>
+          <p class="phase-num">Phase 2</p>
+          <p class="phase-name">Acceptance Before Control</p>
+        </div>
+        <div class="phase-item">
+          <div class="phase-indicator">&nbsp;</div>
+          <p class="phase-num">Phase 3</p>
+          <p class="phase-name">Preparation Without Loss</p>
+        </div>
+      </div>
+    </div>
+  </div>
+<!-- ══ CONTENT ══ -->
+  <div class="content"><!-- Opening message -->
+    <div class="opening">
+      <p class="opening-label">A note before you begin</p>
+      <p>You are here because something has shifted. You may not be able to name it clearly yet, but you have noticed something, and that noticing matters. 
+        <strong>This course is built for exactly that moment.</strong>
+      </p>
+      <p>What you are about to do is not a clinical assessment. There are no right or wrong answers. You are not diagnosing your parent, and you are not being tested. You are simply giving yourself the space to be honest about what you have already seen, before you talk yourself out of it again.</p>
+      <p>Work through each section at your own pace. Be specific in your notes. Trust what you have noticed. 
+        <strong>The clarity you build here is yours to keep.</strong>
+      </p>
+    </div>
+<!-- How the program works -->
+    <p class="section-label">How this program works</p>
+    <div class="how-grid">
+      <div class="how-card">
+        <div class="how-icon">&nbsp;</div>
+        <p class="how-title">Structured sections, one at a time</p>
+        <p class="how-desc">Each module is divided into focused sections of three to four signals. Work through one section at a sitting. There is no need to complete everything in one go.</p>
+      </div>
+      <div class="how-card">
+        <div class="how-icon">&nbsp;</div>
+        <p class="how-title">Each section takes 10 to 20 minutes</p>
+        <p class="how-desc">The tools are designed for honest reflection, not speed. Allow yourself the time to write specific notes that detail is what makes your record genuinely useful later.</p>
+      </div>
+      <div class="how-card">
+        <div class="how-icon">&nbsp;</div>
+        <p class="how-title">Open, mark, and add your notes</p>
+        <p class="how-desc">Each signal opens to reveal a full description, guidance on what to look for, and a notes field. Mark how often you have seen the signal, then write what you actually observed.</p>
+      </div>
+      <div class="how-card">
+        <div class="how-icon">&nbsp;</div>
+        <p class="how-title">Your results build as you go</p>
+        <p class="how-desc">A summary at the end of each section reflects what you have marked and interprets the pattern in plain language. It will tell you what it sees -- honestly and without alarm.</p>
+      </div>
+    </div>
+<!-- Save notice -->
+    <div class="save-notice" style="margin-top: 12px;">
+      <div class="save-notice-text">
+        <strong>Your responses are not stored automatically.</strong> Systeme.io does not save the notes or selections you make inside these tools. At the end of each section, use the Print or Save as PDF button to keep your results. This is your record, it belongs to you and it is worth preserving.
+      </div>
+    </div>
+<!-- Expandable: What makes a useful note -->
+    <p class="section-label" style="margin-top: 32px;">Going deeper</p>
+    <div id="expand-1" class="expand-block">
+      <div class="expand-trigger">
+        <div class="expand-icon-wrap">&nbsp;</div>
+        <span class="expand-title">What makes a useful note inside the tools</span>
+      </div>
+      <div class="expand-body">
+        <p>The notes field inside each signal is where this work becomes genuinely valuable. A vague sense that something has changed fades quickly. A specific, dated observation does not.</p>
+        <p>
+          <strong>A useful note has three things in it:</strong> what you actually saw or heard, when it happened, and how it compared to what used to be normal for your parent. You do not need complete sentences. You do not need to be polite or measured. Write what you noticed, in your own words, as honestly as you can.
+        </p>
+        <p>The level of detail you put into your notes now is what makes this record useful when you need to have a conversation with a sibling, a GP, or your parent themselves. A vague worry is hard to act on. A written observation with a date is something you can work with.</p>
+        <div class="expand-example">
+          <p class="expand-example-label">Example of a useful note</p>
+          <p>"Visited on a Tuesday in March. The kitchen smelled stale and the dishes from at least two days were still in the sink. The laundry basket in the hall was overflowing. She used to do a full clean every weekend without fail, this is not a bad week, it is a pattern I have noticed over the last three visits. She said she had not been feeling well but brushed it off quickly."</p>
+        </div>
+      </div>
+    </div>
+    <div id="expand-2" class="expand-block">
+      <div class="expand-trigger">
+        <div class="expand-icon-wrap">&nbsp;</div>
+        <span class="expand-title">What to do with your results when a section is complete</span>
+      </div>
+      <div class="expand-body">
+        <p>At the end of each section, a summary panel shows you what you have marked and how to interpret the pattern. It will highlight any signals that are already happening regularly and give you an honest picture of where things stand right now.</p>
+        <p>
+          <strong>Before you leave the page, print or save it as a PDF.</strong> This is the only way to keep your responses. The print button opens a clean, well-formatted version of the page that includes all your notes and selections, ready to save to your device or print for your records.
+        </p>
+        <p>Your printed sections can be used in a number of ways:</p>
+        <ul class="expand-steps">
+          <li>
+            <span class="step-num">1</span>Keep them as a personal record to revisit over time, patterns that are building slowly become much clearer when you compare entries from different dates.
+          </li>
+          <li>
+            <span class="step-num">2</span>Share them with a sibling or partner who needs to understand what you have been seeing, a written record is far more useful than trying to explain it in a conversation.
+          </li>
+          <li>
+            <span class="step-num">3</span>Bring them to a GP appointment as supporting context. A doctor who can read specific observations with dates is in a much better position to help than one working from a general concern.
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div id="expand-3" class="expand-block">
+      <div class="expand-trigger">
+        <div class="expand-icon-wrap">&nbsp;</div>
+        <span class="expand-title">If you are not sure where to start or whether any of this applies to you</span>
+      </div>
+      <div class="expand-body">
+        <p>It is common to arrive at a course like this and feel uncertain. You might be thinking: is what I have noticed serious enough to warrant this? Am I overreacting? Maybe this is just normal ageing.</p>
+        <p>That uncertainty is exactly why this course exists. You do not need to have reached a point of crisis to use these tools. You do not need to be certain that something is wrong. 
+          <strong>The Signal Spotter is built for the stage before certainty</strong>, the stage where you have a feeling, a handful of observations, and a quiet worry that you keep talking yourself out of.
+        </p>
+        <p>Start with Section 1 and work through it honestly. If a signal does not apply to your situation, mark "Not yet" and move on. If something does apply, open the card, read the description, and write down what you have seen, however small it seems. The picture builds across all three sections. You do not need to know what it means before you start.</p>
+        <p>
+          <strong>There are no wrong answers here. There is only what you have noticed.</strong> That is enough to begin.
+        </p>
+      </div>
+    </div>
+<!-- Module 1 roadmap -->
+    <p class="section-label" style="margin-top: 32px;">Module 1 · What you will cover</p>
+    <p class="roadmap-intro">Course 1 covers 
+      <strong>25 signals</strong> organised across four modules. Module 1 focuses on the most visible and immediate signals, the ones that show up in daily life before anything more serious becomes apparent. It contains three sections and takes most people between 30 and 50 minutes to complete in full, though you can work through it across multiple sittings.
+    </p>
+    <div class="module-block">
+      <div class="module-header">
+        <div class="module-num-badge">1</div>
+        <div class="module-header-text">
+          <p class="module-header-label">Module 1 · Reading the Signs</p>
+          <p class="module-header-name">What I Am Noticing Day to Day</p>
+        </div>
+      </div>
+      <div class="module-desc">The signals in this module are the ones families notice first, before anything gets formally named or addressed. Home, food, and movement. These are the areas where early changes most reliably show up, and the areas most likely to be explained away before they are properly seen.</div>
+      <div class="section-cards">
+        <div class="section-card">
+          <div class="section-card-num">1</div>
+          <div class="section-card-body">
+            <p class="section-card-title">Around the Home</p>
+            <p class="section-card-desc">Cleaning, clutter, home maintenance, and the overall feel of the home. You are not looking for a perfect house, you are looking for a shift from what used to be normal.</p>
+            <p class="section-card-count">4 signals · approx. 15 minutes</p>
+          </div>
+        </div>
+        <div class="section-card">
+          <div class="section-card-num">2</div>
+          <div class="section-card-body">
+            <p class="section-card-title">Food and Eating</p>
+            <p class="section-card-desc">Shopping, cooking, meals, and physical changes linked to nutrition. Nutrition often declines quietly and early, this section helps you look honestly at what has changed.</p>
+            <p class="section-card-count">4 signals · approx. 15 minutes</p>
+          </div>
+        </div>
+        <div class="section-card">
+          <div class="section-card-num">3</div>
+          <div class="section-card-body">
+            <p class="section-card-title">Getting Around</p>
+            <p class="section-card-desc">Driving, navigating familiar places, and getting out of the house. Changes here are often subtle at first and carry significant implications for independence and safety.</p>
+            <p class="section-card-count">3 signals · approx. 10 minutes</p>
+          </div>
+        </div>
+      </div>
+    </div>
+<!-- Begin panel -->
+    <div class="begin-panel">
+      <p class="begin-panel-title">You are ready to begin</p>
+      <p class="begin-panel-sub">Use the course navigation above to open Section 1: Around the Home. Take your time. Be honest. Your observations are the most valuable thing in this program.</p>
+      <div class="begin-instruction">
+        <span class="begin-arrow">↑</span>When you are ready, find Section 1 in the course menu above and click to open it. Come back here at any time to review how the module is structured or to remind yourself of how the tools work.
+      </div>
+    </div>
+  </div>
+<!-- /content --> <!-- ══ FOOTER ══ -->
+  <div class="footer">
+    <p>
+      <strong>Genovean</strong> · The Quiet Shift · Course 1: Seeing It Clearly
+    </p>
+    <p style="margin-top: 5px;">Phase 1: Awareness Before Urgency · Module 1</p>
+    <p style="margin-top: 4px;">genovean.com · © Genovean 2026</p>
+    <p style="margin-top: 8px; font-size: 11px;">This course is for personal planning and reflection only. It does not constitute medical, legal, or financial advice.</p>
+  </div>
+</div>
+<!-- /page-wrap -->

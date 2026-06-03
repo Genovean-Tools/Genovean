@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Seeing It Clearly -- Genovean</title>
+<title>Seeing It Clearly - Genovean</title>
 <style>
 :root {
   --g-dark:    #1A3A2A;
@@ -289,6 +289,15 @@ body {
   cursor: pointer;
   user-select: none;
   transition: background .12s;
+  width: 100%;
+  background: transparent;
+  border: none;
+  text-align: left;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 15px;
+  color: var(--g-text);
+  -webkit-appearance: none;
+  appearance: none;
 }
 .expand-trigger:hover { background: #fafaf7; }
 .expand-icon-wrap {
@@ -628,7 +637,7 @@ body {
         </svg>
       </div>
       <p class="how-title">Each section takes 10 to 20 minutes</p>
-      <p class="how-desc">The tools are designed for honest reflection, not speed. Allow yourself the time to write specific notes, that detail is what makes your record genuinely useful later.</p>
+      <p class="how-desc">The tools are designed for honest reflection, not speed. Allow yourself the time to write specific notes that detail is what makes your record genuinely useful later.</p>
     </div>
     <div class="how-card">
       <div class="how-icon">
@@ -660,7 +669,7 @@ body {
     </svg>
     <div class="save-notice-text">
       <strong>Your responses are not stored automatically.</strong>
-      Systeme.io does not have at ability to save the notes or selections you make inside these tools. At the end of each section, use the Print or Save as PDF button to keep your results. This is your record, it belongs to you and it is worth preserving.
+      Systeme.io does not save the notes or selections you make inside these tools. At the end of each section, use the Print or Save as PDF button to keep your results. This is your record, it belongs to you and it is worth preserving.
     </div>
   </div>
 
@@ -668,7 +677,7 @@ body {
   <p class="section-label" style="margin-top:32px;">Going deeper</p>
 
   <div class="expand-block" id="expand-1">
-    <div class="expand-trigger" onclick="toggleExpand('expand-1')">
+    <button class="expand-trigger" type="button" onclick="toggleExpand('expand-1')">
       <div class="expand-icon-wrap">
         <svg viewBox="0 0 16 16" fill="none">
           <path d="M3 4h10M3 8h7M3 12h5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
@@ -676,7 +685,7 @@ body {
       </div>
       <span class="expand-title">What makes a useful note inside the tools</span>
       <svg class="expand-caret" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-    </div>
+    </button>
     <div class="expand-body">
       <p>The notes field inside each signal is where this work becomes genuinely valuable. A vague sense that something has changed fades quickly. A specific, dated observation does not.</p>
       <p><strong>A useful note has three things in it:</strong> what you actually saw or heard, when it happened, and how it compared to what used to be normal for your parent. You do not need complete sentences. You do not need to be polite or measured. Write what you noticed, in your own words, as honestly as you can.</p>
@@ -689,7 +698,7 @@ body {
   </div>
 
   <div class="expand-block" id="expand-2">
-    <div class="expand-trigger" onclick="toggleExpand('expand-2')">
+    <button class="expand-trigger" type="button" onclick="toggleExpand('expand-2')">
       <div class="expand-icon-wrap">
         <svg viewBox="0 0 16 16" fill="none">
           <rect x="3" y="5" width="10" height="8" rx="1" stroke="currentColor" stroke-width="1.4"/>
@@ -698,7 +707,7 @@ body {
       </div>
       <span class="expand-title">What to do with your results when a section is complete</span>
       <svg class="expand-caret" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-    </div>
+    </button>
     <div class="expand-body">
       <p>At the end of each section, a summary panel shows you what you have marked and how to interpret the pattern. It will highlight any signals that are already happening regularly and give you an honest picture of where things stand right now.</p>
       <p><strong>Before you leave the page, print or save it as a PDF.</strong> This is the only way to keep your responses. The print button opens a clean, well-formatted version of the page that includes all your notes and selections -- ready to save to your device or print for your records.</p>
@@ -706,13 +715,13 @@ body {
       <ul class="expand-steps">
         <li><span class="step-num">1</span>Keep them as a personal record to revisit over time, patterns that are building slowly become much clearer when you compare entries from different dates.</li>
         <li><span class="step-num">2</span>Share them with a sibling or partner who needs to understand what you have been seeing, a written record is far more useful than trying to explain it in a conversation.</li>
-        <li><span class="step-num">3</span>Bring them to a doctor appointment as supporting context. A doctor who can read specific observations with dates is in a much better position to help than one working from a general concern.</li>
+        <li><span class="step-num">3</span>Bring them to a doctor appointment as supporting information. A doctor who can read specific observations with dates is in a much better position to help than one working from a general concern.</li>
       </ul>
     </div>
   </div>
 
   <div class="expand-block" id="expand-3">
-    <div class="expand-trigger" onclick="toggleExpand('expand-3')">
+    <button class="expand-trigger" type="button" onclick="toggleExpand('expand-3')">
       <div class="expand-icon-wrap">
         <svg viewBox="0 0 16 16" fill="none">
           <circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.4"/>
@@ -722,7 +731,7 @@ body {
       </div>
       <span class="expand-title">If you are not sure where to start or whether any of this applies to you</span>
       <svg class="expand-caret" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-    </div>
+    </button>
     <div class="expand-body">
       <p>It is common to arrive at a course like this and feel uncertain. You might be thinking: is what I have noticed serious enough to warrant this? Am I overreacting? Maybe this is just normal ageing.</p>
       <p>That uncertainty is exactly why this course exists. You do not need to have reached a point of crisis to use these tools. You do not need to be certain that something is wrong. <strong>The Signal Spotter is built for the stage before certainty</strong> -- the stage where you have a feeling, a handful of observations, and a quiet worry that you keep talking yourself out of.</p>
@@ -745,7 +754,7 @@ body {
       </div>
     </div>
     <div class="module-desc">
-      The signals in this module are the ones families notice first b,efore anything gets formally named or addressed. Home, food, and movement. These are the areas where early changes most reliably show up, and the areas most likely to be explained away before they are properly seen.
+      The signals in this module are the ones families notice first, before anything gets formally named or addressed. Home, food, and movement. These are the areas where early changes most reliably show up, and the areas most likely to be explained away before they are properly seen.
     </div>
     <div class="section-cards">
 
@@ -803,13 +812,43 @@ body {
 
 <script>
 function toggleExpand(id) {
-  var block = document.getElementById(id);
-  var isOpen = block.classList.contains('is-open');
-  document.querySelectorAll('.expand-block.is-open').forEach(function(b) {
-    b.classList.remove('is-open');
+  var blocks = document.querySelectorAll('.expand-block');
+  var target = document.getElementById(id);
+  var body = target.querySelector('.expand-body');
+  var caret = target.querySelector('.expand-caret');
+  var iconWrap = target.querySelector('.expand-icon-wrap');
+  var iconSvg = target.querySelector('.expand-icon-wrap svg');
+  var isOpen = body.style.display === 'block';
+
+  // Close all
+  blocks.forEach(function(block) {
+    var b = block.querySelector('.expand-body');
+    var c = block.querySelector('.expand-caret');
+    var iw = block.querySelector('.expand-icon-wrap');
+    var sv = block.querySelector('.expand-icon-wrap svg');
+    if (b) b.style.display = 'none';
+    if (c) c.style.transform = 'rotate(0deg)';
+    if (iw) { iw.style.background = 'var(--g-light)'; }
+    if (sv) { sv.style.color = 'var(--g-mid)'; }
+    block.classList.remove('is-open');
   });
-  if (!isOpen) block.classList.add('is-open');
+
+  // Open target if it was closed
+  if (!isOpen) {
+    body.style.display = 'block';
+    if (caret) caret.style.transform = 'rotate(180deg)';
+    if (iconWrap) { iconWrap.style.background = 'var(--g-mid)'; }
+    if (iconSvg) { iconSvg.style.color = '#fff'; }
+    target.classList.add('is-open');
+  }
 }
+
+// Init: ensure all bodies are hidden on load
+document.addEventListener('DOMContentLoaded', function() {
+  document.querySelectorAll('.expand-body').forEach(function(b) {
+    b.style.display = 'none';
+  });
+});
 </script>
 
 </body>

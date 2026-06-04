@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Signal Spotter: Changes in Their Body -- Genovean</title>
+<style>
+:root {
+  --g-dark:    #1A3A2A;
+  --g-mid:     #1D9E75;
+  --g-light:   #E1F5EE;
+  --g-sand:    #F5F0E8;
+  --g-warm:    #C8B89A;
+  --g-text:    #1C1C1A;
+  --g-muted:   #5A5A56;
+  --g-subtle:  #8A8A84;
+  --g-border:  #D8D4C8;
+  --g-white:   #FFFFFF;
+  --g-amber:   #FAEEDA;
+  --g-amber-t: #633806;
+  --g-amber-b: #BA7517;
+  --g-red-bg:  #FEF3F3;
+  --g-red-bdr: #E8AAAA;
+  --g-red-t:   #7A2020;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: Georgia, 'Times New Roman', serif; background: var(--g-sand); color: var(--g-text); line-height: 1.65; font-size: 15px; }
+@media print {
+  body { background: #fff; font-size: 11pt; }
+  .no-print { display: none !important; }
+  .signal-card { break-inside: avoid; page-break-inside: avoid; }
+  .header-bar { background: #1A3A2A !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .section-band { background: #E1F5EE !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .module-bridge { background: #F5F0E8 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .orient-block { background: #F5F0E8 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .detail-body { display: block !important; }
+  .freq-row { display: flex !important; }
+  .notes-field { min-height: 60px !important; border: 1px solid #ccc !important; }
+  .summary-panel { background: #1A3A2A !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .regular-panel { background: #7A2020 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .save-notice { background: #FAEEDA !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .page-wrap { max-width: 100%; padding: 0; }
+  a { color: inherit; text-decoration: none; }
+}
+.page-wrap { max-width: 780px; margin: 0 auto; padding: 0 0 60px; }
+.header-bar { background: var(--g-dark); color: #fff; padding: 22px 36px 20px; }
+.header-top { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 10px; margin-bottom: 14px; }
+.brand-name { font-family: Georgia, serif; font-size: 13px; font-weight: normal; letter-spacing: .12em; text-transform: uppercase; color: var(--g-warm); }
+.header-nav { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.course-crumb { font-size: 10px; letter-spacing: .08em; text-transform: uppercase; color: rgba(255,255,255,.4); }
+.crumb-sep { color: rgba(255,255,255,.2); font-size: 10px; }
+.crumb-active { font-size: 10px; letter-spacing: .08em; text-transform: uppercase; color: var(--g-warm); font-weight: bold; }
+.section-tag { font-size: 11px; font-weight: bold; letter-spacing: .1em; text-transform: uppercase; background: rgba(255,255,255,.12); color: var(--g-warm); padding: 3px 11px; border-radius: 20px; }
+.tool-title { font-family: Georgia, serif; font-size: 26px; font-weight: normal; color: #fff; letter-spacing: -.02em; margin-bottom: 7px; line-height: 1.2; }
+.tool-subtitle { font-size: 13.5px; color: rgba(255,255,255,.62); max-width: 520px; line-height: 1.6; }
+.progress-wrap { background: var(--g-white); border-bottom: 1px solid var(--g-border); padding: 11px 36px; display: flex; align-items: center; gap: 16px; font-size: 12px; color: var(--g-subtle); position: sticky; top: 0; z-index: 10; }
+.progress-track { flex: 1; height: 5px; background: var(--g-border); border-radius: 3px; overflow: hidden; }
+.progress-fill { height: 100%; background: var(--g-mid); border-radius: 3px; width: 0%; transition: width .3s ease; }
+.progress-label { white-space: nowrap; font-size: 12px; color: var(--g-subtle); min-width: 80px; text-align: right; }
+
+/* Module bridge */
+.module-bridge {
+  background: var(--g-sand);
+  border: 1px solid var(--g-border);
+  border-left: 4px solid var(--g-mid);
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  padding: 18px 22px;
+  margin: 24px 36px 0;
+}
+.module-bridge-label { font-size: 10px; font-weight: bold; letter-spacing: .12em; text-transform: uppercase; color: var(--g-mid); margin-bottom: 8px; font-family: Georgia, serif; }
+.module-bridge p { font-size: 13.5px; color: var(--g-muted); line-height: 1.75; font-family: Georgia, serif; }
+.module-bridge p strong { color: var(--g-text); }
+
+/* Orienting message -- Module 3 specific */
+.orient-block {
+  background: var(--g-white);
+  border: 1px solid var(--g-border);
+  border-left: 4px solid var(--g-warm);
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  padding: 18px 22px;
+  margin: 16px 36px 0;
+}
+.orient-label { font-size: 10px; font-weight: bold; letter-spacing: .12em; text-transform: uppercase; color: var(--g-warm); margin-bottom: 8px; font-family: Georgia, serif; }
+.orient-block p { font-size: 13.5px; color: var(--g-muted); line-height: 1.75; font-family: Georgia, serif; margin-bottom: 10px; }
+.orient-block p:last-child { margin-bottom: 0; }
+.orient-block p strong { color: var(--g-text); }
+
+.content-area { padding: 0 36px; }
+.section-band { display: flex; align-items: center; gap: 10px; background: var(--g-light); padding: 9px 36px; margin: 24px -36px 14px; font-size: 11px; font-weight: bold; letter-spacing: .1em; text-transform: uppercase; color: #085041; }
+.section-icon { width: 18px; height: 18px; border-radius: 50%; background: var(--g-mid); display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.section-icon svg { width: 10px; height: 10px; }
+.signal-card { background: var(--g-white); border: 1px solid var(--g-border); border-radius: var(--radius-md); margin-bottom: 10px; overflow: hidden; transition: border-color .15s; }
+.signal-card.is-marked  { border-color: var(--g-mid); }
+.signal-card.is-regular { border-color: #C0392B; }
+.signal-card.is-no      { border-color: var(--g-border); }
+.signal-header { display: flex; align-items: center; gap: 12px; padding: 13px 16px; cursor: pointer; user-select: none; background: var(--g-white); transition: background .12s; }
+.signal-header:hover { background: #fafaf7; }
+.signal-num { width: 24px; height: 24px; border-radius: 50%; background: var(--g-sand); border: 1px solid var(--g-border); font-size: 11px; font-weight: bold; color: var(--g-subtle); display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: background .15s, color .15s; font-family: Georgia, serif; }
+.signal-card.is-regular .signal-num   { background: #C0392B; border-color: #C0392B; color: #fff; }
+.signal-card.is-yes .signal-num       { background: var(--g-mid); border-color: var(--g-mid); color: #fff; }
+.signal-card.is-sometimes .signal-num { background: var(--g-amber-b); border-color: var(--g-amber-b); color: #fff; }
+.signal-card.is-no .signal-num        { background: var(--g-border); border-color: var(--g-border); color: var(--g-subtle); }
+.signal-label { flex: 1; font-size: 14px; font-weight: normal; font-family: Georgia, serif; color: var(--g-text); line-height: 1.4; }
+.signal-status { font-size: 11px; color: var(--g-subtle); white-space: nowrap; font-family: Georgia, serif; }
+.signal-card.is-regular .signal-status  { color: #C0392B; font-weight: bold; }
+.signal-card.is-yes .signal-status      { color: #0F6E56; font-weight: bold; }
+.signal-card.is-sometimes .signal-status{ color: var(--g-amber-b); font-weight: bold; }
+.chevron { width: 16px; height: 16px; color: var(--g-border); flex-shrink: 0; transition: transform .2s; }
+.signal-card.is-open .chevron { transform: rotate(180deg); }
+.detail-body { display: none; padding: 0 16px 18px; border-top: 1px solid var(--g-border); }
+.signal-card.is-open .detail-body { display: block; }
+.signal-desc { font-size: 13.5px; color: var(--g-muted); line-height: 1.75; padding: 15px 0 13px; font-family: Georgia, serif; }
+.guidance-box { background: var(--g-sand); border-left: 3px solid var(--g-warm); padding: 12px 15px; margin-bottom: 8px; border-radius: 0 var(--radius-sm) var(--radius-sm) 0; }
+.guidance-label { font-size: 10px; font-weight: bold; letter-spacing: .1em; text-transform: uppercase; color: var(--g-subtle); margin-bottom: 5px; font-family: Georgia, serif; }
+.guidance-text { font-size: 13px; color: var(--g-muted); line-height: 1.65; font-family: Georgia, serif; }
+.observe-box { background: var(--g-light); border-left: 3px solid var(--g-mid); padding: 12px 15px; margin-bottom: 14px; border-radius: 0 var(--radius-sm) var(--radius-sm) 0; }
+.observe-label { font-size: 10px; font-weight: bold; letter-spacing: .1em; text-transform: uppercase; color: #085041; margin-bottom: 5px; font-family: Georgia, serif; }
+.observe-text { font-size: 13px; color: #1A4A38; line-height: 1.65; font-family: Georgia, serif; }
+.freq-label { font-size: 11px; font-weight: bold; letter-spacing: .08em; text-transform: uppercase; color: var(--g-subtle); margin-bottom: 8px; font-family: Georgia, serif; }
+.freq-row { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+.freq-btn { flex: 1; min-width: 90px; padding: 9px 10px; font-size: 12px; border: 1px solid var(--g-border); border-radius: var(--radius-sm); background: var(--g-white); color: var(--g-muted); cursor: pointer; text-align: center; font-family: Georgia, serif; transition: background .12s, border-color .12s, color .12s; line-height: 1.3; }
+.freq-btn:hover { background: var(--g-sand); }
+.freq-btn.sel-regular   { background: var(--g-red-bg); border-color: #C0392B; color: var(--g-red-t); font-weight: bold; }
+.freq-btn.sel-yes       { background: var(--g-light); border-color: var(--g-mid); color: #085041; font-weight: bold; }
+.freq-btn.sel-sometimes { background: var(--g-amber); border-color: var(--g-amber-b); color: var(--g-amber-t); font-weight: bold; }
+.freq-btn.sel-no        { background: var(--g-sand); border-color: var(--g-border); color: var(--g-subtle); font-style: italic; }
+.notes-label { font-size: 11px; font-weight: bold; letter-spacing: .08em; text-transform: uppercase; color: var(--g-subtle); margin-bottom: 8px; font-family: Georgia, serif; }
+.notes-example { background: var(--g-sand); border: 1px dashed var(--g-border); border-radius: var(--radius-sm); padding: 11px 14px; margin-bottom: 10px; }
+.notes-example-label { font-size: 10px; font-weight: bold; letter-spacing: .09em; text-transform: uppercase; color: var(--g-subtle); margin-bottom: 5px; font-family: Georgia, serif; }
+.notes-example-text { font-size: 12.5px; color: var(--g-muted); line-height: 1.65; font-family: Georgia, serif; font-style: italic; }
+.notes-field { width: 100%; min-height: 80px; border: 1px solid var(--g-border); border-radius: var(--radius-sm); padding: 10px 12px; font-size: 13px; font-family: Georgia, serif; color: var(--g-text); background: var(--g-white); resize: vertical; line-height: 1.55; transition: border-color .15s; }
+.notes-field:focus { outline: none; border-color: var(--g-mid); }
+.notes-field::placeholder { color: var(--g-subtle); font-style: italic; }
+.notes-why { margin-top: 9px; padding: 10px 14px; background: var(--g-white); border: 1px solid var(--g-border); border-radius: var(--radius-sm); font-size: 12px; color: var(--g-subtle); line-height: 1.65; font-family: Georgia, serif; }
+.notes-why strong { color: var(--g-muted); }
+.save-notice { background: var(--g-amber); border: 1px solid var(--g-amber-b); border-radius: var(--radius-md); padding: 15px 18px; margin-top: 28px; display: flex; gap: 13px; align-items: flex-start; }
+.save-notice-icon { width: 20px; height: 20px; flex-shrink: 0; margin-top: 1px; color: var(--g-amber-b); }
+.save-notice-text { font-size: 13px; color: var(--g-amber-t); line-height: 1.65; font-family: Georgia, serif; }
+.save-notice-text strong { color: #633806; display: block; margin-bottom: 3px; font-size: 13.5px; }
+.summary-panel { background: var(--g-dark); border-radius: var(--radius-lg); padding: 26px 28px; margin-top: 14px; color: #fff; }
+.summary-title { font-family: Georgia, serif; font-size: 18px; font-weight: normal; color: #fff; margin-bottom: 18px; letter-spacing: -.01em; }
+.stats-row { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; margin-bottom: 20px; }
+.stat-box { background: rgba(255,255,255,.08); border-radius: var(--radius-md); padding: 13px 10px; text-align: center; }
+.stat-num { font-family: Georgia, serif; font-size: 26px; font-weight: normal; display: block; margin-bottom: 3px; color: #fff; }
+.stat-box.reg-box .stat-num  { color: #F4A4A4; }
+.stat-box.yes-box .stat-num  { color: #5DCAA5; }
+.stat-box.some-box .stat-num { color: #FAC775; }
+.stat-lbl { font-size: 10px; color: rgba(255,255,255,.5); letter-spacing: .05em; text-transform: uppercase; }
+.regular-panel { background: rgba(192,57,43,.25); border: 1px solid rgba(192,57,43,.5); border-radius: var(--radius-md); padding: 15px 18px; margin-bottom: 18px; }
+.regular-panel-title { font-size: 12px; font-weight: bold; letter-spacing: .08em; text-transform: uppercase; color: #F4A4A4; margin-bottom: 10px; font-family: Georgia, serif; }
+.regular-list { list-style: none; }
+.regular-list li { font-size: 13px; color: rgba(255,255,255,.85); padding: 5px 0; border-bottom: 1px solid rgba(255,255,255,.08); display: flex; gap: 9px; align-items: flex-start; font-family: Georgia, serif; line-height: 1.45; }
+.regular-list li:last-child { border-bottom: none; }
+.regular-list li::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: #F4A4A4; flex-shrink: 0; margin-top: 6px; }
+.regular-note { font-size: 12px; color: rgba(255,255,255,.55); margin-top: 10px; line-height: 1.65; font-family: Georgia, serif; }
+.interpretation { background: rgba(255,255,255,.07); border-left: 3px solid var(--g-mid); padding: 13px 16px; border-radius: 0 var(--radius-sm) var(--radius-sm) 0; font-size: 13.5px; color: rgba(255,255,255,.82); line-height: 1.65; font-family: Georgia, serif; margin-bottom: 20px; }
+.interpretation strong { color: #fff; }
+.next-label { font-size: 11px; font-weight: bold; letter-spacing: .1em; text-transform: uppercase; color: rgba(255,255,255,.4); margin-bottom: 10px; }
+.next-steps { display: flex; gap: 10px; flex-wrap: wrap; }
+.next-btn { padding: 9px 18px; font-size: 13px; border-radius: var(--radius-sm); cursor: pointer; font-family: Georgia, serif; border: none; transition: opacity .15s; }
+.next-btn:hover { opacity: .88; }
+.next-btn.primary   { background: var(--g-mid); color: #fff; }
+.next-btn.secondary { background: rgba(255,255,255,.12); color: rgba(255,255,255,.82); border: 1px solid rgba(255,255,255,.2); }
+.action-bar { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 22px; padding-top: 18px; border-top: 1px solid rgba(255,255,255,.1); }
+.action-btn { padding: 10px 18px; font-size: 13px; border-radius: var(--radius-sm); cursor: pointer; font-family: Georgia, serif; display: flex; align-items: center; gap: 7px; transition: opacity .15s; border: none; }
+.action-btn svg { width: 14px; height: 14px; }
+.action-btn.print-btn { background: var(--g-mid); color: #fff; }
+.action-btn.print-btn:hover { opacity: .88; }
+.action-btn.reset-btn { background: rgba(255,255,255,.1); color: rgba(255,255,255,.7); }
+.action-btn.reset-btn:hover { background: rgba(255,255,255,.16); }
+.print-reminder { font-size: 12px; color: rgba(255,255,255,.45); margin-top: 10px; line-height: 1.65; font-family: Georgia, serif; }
+.footer { text-align: center; padding: 26px 36px 0; font-size: 12px; color: var(--g-subtle); font-family: Georgia, serif; border-top: 1px solid var(--g-border); margin-top: 32px; }
+.footer strong { color: var(--g-muted); }
+@media (max-width: 540px) {
+  .header-bar, .content-area, .section-band { padding-left: 18px; padding-right: 18px; }
+  .section-band { margin-left: -18px; margin-right: -18px; }
+  .tool-title { font-size: 22px; }
+  .progress-wrap { padding-left: 18px; padding-right: 18px; }
+  .module-bridge, .orient-block { margin-left: 18px; margin-right: 18px; }
+  .stats-row { grid-template-columns: 1fr 1fr; }
+  .stat-num { font-size: 22px; }
+  .freq-btn { min-width: 80px; font-size: 11px; }
+}
+</style>
+</head>
+<body>
+<div class="page-wrap">
+
+<div class="header-bar">
+  <div class="header-top">
+    <span class="brand-name">Genovean</span>
+    <div class="header-nav">
+      <span class="course-crumb">Seeing It Clearly</span>
+      <span class="crumb-sep">/</span>
+      <span class="course-crumb">Module 3</span>
+      <span class="crumb-sep">/</span>
+      <span class="crumb-active">Section 1 of 3</span>
+    </div>
+    <span class="section-tag">Phase 1 &middot; Awareness</span>
+  </div>
+  <h1 class="tool-title">Signal Spotter: Changes in Their Body</h1>
+  <p class="tool-subtitle">Physical changes are often the most visible signals, and the most likely to be explained away as tiredness, age, or a difficult week. This section asks you to look at what you have actually seen, without the explanations.</p>
+</div>
+
+<div class="progress-wrap no-print">
+  <span id="prog-text" style="white-space:nowrap;font-size:12px;color:#8A8A84;">0 of 3 signals reviewed</span>
+  <div class="progress-track"><div class="progress-fill" id="prog-fill"></div></div>
+  <span class="progress-label" id="prog-pct">0%</span>
+</div>
+
+<!-- MODULE BRIDGE -->
+<div class="module-bridge no-print">
+  <p class="module-bridge-label">Moving into Module 3</p>
+  <p>Modules 1 and 2 built your observational record and helped you understand what the pattern means. <strong>Module 3 moves into harder territory.</strong> Health and cognitive changes are the signals most families are most reluctant to name clearly, because naming them makes them real in a way that is difficult to undo. This module does not ask you to name a diagnosis. It asks you to record what you have observed, honestly and specifically, so that the people who can interpret and act on it have the information they need.</p>
+</div>
+
+<!-- ORIENTING MESSAGE -->
+<div class="orient-block no-print">
+  <p class="orient-label">Before you begin this module</p>
+  <p>What you are about to work through may feel more confronting than what came before. That is expected and it is normal. The physical and cognitive signals in this module are the ones families most often notice first but articulate last, because they sit closest to the question that no one wants to ask directly.</p>
+  <p><strong>This section is not asking you to reach a conclusion.</strong> It is asking you to observe and record. You are not diagnosing your parent. You are not making decisions about their care. You are doing something much simpler, and much more important: you are being honest about what you have seen. That honesty is what everything else, every conversation, every plan, every decision, will eventually depend on. Take your time with this module. Be specific. Do not soften what you have noticed to make it easier to write down.</p>
+</div>
+
+<div class="content-area">
+
+<div class="section-band">
+  <span class="section-icon">
+    <svg viewBox="0 0 10 10" fill="none">
+      <path d="M5 1.5C3.8 3 2.5 4 2.5 5.5a2.5 2.5 0 0 0 5 0C7.5 4 6.2 3 5 1.5z" fill="#fff"/>
+    </svg>
+  </span>
+  Changes in Their Body
+</div>
+
+<!-- SIGNAL 1 -->
+<div class="signal-card" id="card-1">
+  <div class="signal-header" onclick="toggleCard(1)">
+    <span class="signal-num">1</span>
+    <span class="signal-label">How they move, walk, and carry themselves has changed</span>
+    <span class="signal-status" id="status-1">Not reviewed</span>
+    <svg class="chevron" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+  </div>
+  <div class="detail-body">
+    <p class="signal-desc">Walking more slowly than they used to. A gait that has become shuffling or hesitant. Holding onto furniture, walls, or doorframes as they move through rooms, in a way that is new. Difficulty getting up from a chair, which takes more effort, more time, or requires pushing off with both arms in a way it never used to. Hesitation at stairs, stepping down from a kerb, or crossing uneven ground. Holding the handrail on steps they once took without thinking. These are not dramatic changes. They are incremental. They show up in the small physical moments of ordinary daily life, and they are the body's way of saying that something has changed in its confidence, its strength, its balance, or its coordination. Falls are one of the most serious health risks for older adults. The signs that a fall is becoming more likely usually show up in movement and posture long before a fall happens. If you have noticed a change in how your parent moves, you have noticed something worth recording carefully.</p>
+    <div class="guidance-box">
+      <p class="guidance-label">What to look for and where to look</p>
+      <p class="guidance-text">Watch how they get up from a chair when they do not know you are watching. Observe how they move through the kitchen, do they use the counter for support in a way they did not used to? Notice how they walk from the car to the door, or across a car park. Look at stairs and kerbs. Watch whether they reach for your arm in situations they would previously have managed independently. The moments you are looking for are small, physical, and easy to miss if you are not paying attention to movement specifically. Start paying attention to movement.</p>
+    </div>
+    <div class="observe-box">
+      <p class="observe-label">How to observe without making them self-conscious</p>
+      <p class="observe-text">Do not watch them directly and do not comment on what you notice. Your parent's instinct, if they sense they are being observed, will be to perform capability they may not fully have. Watch sideways. Watch in the background. Watch in the moments between conversations, when they stand up to make tea or walk to another room. Those unguarded moments are where you will see the clearest picture. If you have already commented and they have pushed back, that pushback is itself worth noting, it tells you they are aware of the change even if they are not prepared to acknowledge it.</p>
+    </div>
+    <p class="freq-label">How often have you noticed this?</p>
+    <div class="freq-row">
+      <button class="freq-btn" onclick="setFreq(1,'regular',this)">Happening regularly</button>
+      <button class="freq-btn" onclick="setFreq(1,'yes',this)">Yes, I have seen this</button>
+      <button class="freq-btn" onclick="setFreq(1,'sometimes',this)">Once or twice</button>
+      <button class="freq-btn" onclick="setFreq(1,'no',this)">Not yet</button>
+    </div>
+    <p class="notes-label">Your notes</p>
+    <div class="notes-example">
+      <p class="notes-example-label">Example of a useful note</p>
+      <p class="notes-example-text">"He gets up from his chair differently now. He pauses at the edge of the seat first, pushes off with both hands, and steadies himself before taking a step. He has been doing this for about four months. He also walks more slowly than he did, I noticed it clearly when we were walking from the car park to the restaurant last month. He held onto my arm without me offering it, which he has never done before. He used to walk quickly and firmly. This is not the same walk."</p>
+    </div>
+    <textarea class="notes-field" placeholder="Describe specifically what you have noticed about how they move. Where did you see it? What were they doing? How does it compare to how they used to move? Write what you actually saw, not what you think it means." oninput="updateSummary()"></textarea>
+    <div class="notes-why">
+      <strong>Why this note matters.</strong> A doctor assessing fall risk, a physiotherapist reviewing mobility, or a family member who has not been present will find specific observations about movement far more useful than a general concern. Writing what you have seen precisely, the chair, the walk, the reaching for support, turns a feeling into clinical information.
+    </div>
+  </div>
+</div>
+
+<!-- SIGNAL 2 -->
+<div class="signal-card" id="card-2">
+  <div class="signal-header" onclick="toggleCard(2)">
+    <span class="signal-num">2</span>
+    <span class="signal-label">Their physical appearance or body has changed noticeably</span>
+    <span class="signal-status" id="status-2">Not reviewed</span>
+    <svg class="chevron" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+  </div>
+  <div class="detail-body">
+    <p class="signal-desc">Weight loss that makes clothes hang differently. A face that looks thinner or more drawn than you remember. Muscle mass that has visibly reduced, arms that look smaller, legs that seem less substantial. Skin that has changed in colour, texture, or condition in ways that feel new. An overall sense that the person in front of you looks physically different from the person you knew six or twelve months ago. These changes accumulate gradually and are particularly easy to miss when you see someone regularly, the comparison point moves with you. The clearest signal is often the reaction you have when you see them after a gap, or when you look at a recent photograph alongside one from a year ago and notice a difference you cannot attribute to the photograph. Unintentional weight loss in older adults is medically significant and warrants a doctor conversation sooner rather than later. Do not let the normalisation of gradual change stop you from recording what you are actually seeing.</p>
+    <div class="guidance-box">
+      <p class="guidance-label">What to look for and where to look</p>
+      <p class="guidance-text">Look at how their clothes fit. A belt that is fastened on a tighter notch, trousers that bag at the waist, a shirt that was once fitted now hanging loose, these are concrete, specific indicators of weight change that are often clearer than asking directly. Look at their face and hands. Look at how they sit -- is there less physical presence to them than there used to be? If you visit regularly, try to hold a fixed comparison point in your mind from six months ago and compare deliberately, rather than accepting what you currently see as the new normal.</p>
+    </div>
+    <div class="observe-box">
+      <p class="observe-label">How to raise this if you need to</p>
+      <p class="observe-text">If you are concerned about weight or physical appearance, do not lead with the observation directly. "How has your appetite been lately?" or "Are you managing to eat well?" opens the conversation without making it about how they look. Their answer will often tell you more than the question does. If they dismiss the question quickly or change the subject, note that. Defensive minimising of a question about eating is itself a signal worth recording.</p>
+    </div>
+    <p class="freq-label">How often have you noticed this?</p>
+    <div class="freq-row">
+      <button class="freq-btn" onclick="setFreq(2,'regular',this)">Happening regularly</button>
+      <button class="freq-btn" onclick="setFreq(2,'yes',this)">Yes, I have seen this</button>
+      <button class="freq-btn" onclick="setFreq(2,'sometimes',this)">Once or twice</button>
+      <button class="freq-btn" onclick="setFreq(2,'no',this)">Not yet</button>
+    </div>
+    <p class="notes-label">Your notes</p>
+    <div class="notes-example">
+      <p class="notes-example-label">Example of a useful note</p>
+      <p class="notes-example-text">"She looks lighter than she did in the summer. Her trousers are too big now I, noticed because she was wearing a belt on its last hole and the fabric was still bunching at the waist. Her face looks more drawn. I looked at a photo on her mantelpiece from Christmas and compared it to her sitting across from me and the difference was visible enough that I had to stop myself from saying something. I don't know how much weight she has lost but it is noticeable."</p>
+    </div>
+    <textarea class="notes-field" placeholder="What have you noticed about their physical appearance? Be specific, clothing, face, posture, energy levels. Compare to a fixed point in the past. Write what you see, not what you hope is the explanation for it." oninput="updateSummary()"></textarea>
+    <div class="notes-why">
+      <strong>Why this note matters.</strong> Unintentional weight loss is one of the signals that GPs take most seriously. A note that describes specifically what you have seen, the clothing, the comparison to a photograph, the timeframe -- gives a doctor something concrete to work with in an appointment. Do not wait until the change is dramatic to record it.
+    </div>
+  </div>
+</div>
+
+<!-- SIGNAL 3 -->
+<div class="signal-card" id="card-3">
+  <div class="signal-header" onclick="toggleCard(3)">
+    <span class="signal-num">3</span>
+    <span class="signal-label">Small physical signs in everyday moments that were not there before</span>
+    <span class="signal-status" id="status-3">Not reviewed</span>
+    <svg class="chevron" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+  </div>
+  <div class="detail-body">
+    <p class="signal-desc">This signal is about the small physical things, the ones that do not individually look like much but that together, or in the context of what else you have noticed, tell a story. Hands that tremble slightly when holding a cup. A grip that has become noticeably weaker when you take their hand. Difficulty with buttons, zips, or small fastenings that they used to manage easily. Fumbling with keys or a phone in a way that is new. Dropping things more than before. Spilling food or drink in a way that is out of character. Difficulty cutting food, opening jars, or managing tasks that require fine motor control. Fatigue that sets in more quickly than it used to -- sitting down after a short walk, becoming visibly tired by mid-afternoon, losing energy in situations that would not previously have required effort. These are the signals that happen in the small, unnoticed moments of daily life. Individually, they are easy to attribute to tiredness or a difficult day. As a pattern across multiple visits, they are telling you something about physical capacity that is worth documenting carefully.</p>
+    <div class="guidance-box">
+      <p class="guidance-label">What to look for in everyday moments</p>
+      <p class="guidance-text">Notice how they handle objects, a cup, a key, a pen. Watch how they manage with food at a meal. Pay attention to fatigue, when does it show up, how quickly does it arrive, how visible is it? Look at their hands. Notice if they take longer to do things that used to be automatic. The moments this signal appears in are the moments between conversations and activities, when the body is just doing what it does. Start noticing those moments specifically.</p>
+    </div>
+    <div class="observe-box">
+      <p class="observe-label">How to record small things without dismissing them</p>
+      <p class="observe-text">Small physical changes are the easiest to dismiss as irrelevant and the hardest to remember accurately later. Write them down on the day you notice them if you can, even in a note on your phone. The specific detail -- what they were doing, what you saw, when it was -- is what gives these observations their value. "I think his hands tremble sometimes" is less useful than "I noticed his hands shaking when he was pouring tea on Tuesday. He spilled some and looked briefly embarrassed before continuing."</p>
+    </div>
+    <p class="freq-label">How often have you noticed this?</p>
+    <div class="freq-row">
+      <button class="freq-btn" onclick="setFreq(3,'regular',this)">Happening regularly</button>
+      <button class="freq-btn" onclick="setFreq(3,'yes',this)">Yes, I have seen this</button>
+      <button class="freq-btn" onclick="setFreq(3,'sometimes',this)">Once or twice</button>
+      <button class="freq-btn" onclick="setFreq(3,'no',this)">Not yet</button>
+    </div>
+    <p class="notes-label">Your notes</p>
+    <div class="notes-example">
+      <p class="notes-example-label">Example of a useful note</p>
+      <p class="notes-example-text">"His grip is noticeably weaker. I noticed it when we shook hands at Christmas, his handshake was loose in a way that was unusual. He has also been dropping things more. In the last month I have seen him drop his phone twice, drop a cup once, and struggle with the zip on his jacket before giving up and leaving it undone. He seems to tire more quickly too -- by mid-afternoon on our last visit he was clearly flagging in a way he would not have been two years ago."</p>
+    </div>
+    <textarea class="notes-field" placeholder="List the small physical things you have noticed, grip, tremor, fatigue, fine motor difficulty, spilling, dropping. For each one: when did you notice it, what were they doing, has it happened more than once?" oninput="updateSummary()"></textarea>
+    <div class="notes-why">
+      <strong>Why this note matters.</strong> Fine motor changes, tremor, and rapid fatigue can each point toward specific conditions that are far more manageable when identified early. A list of specific, dated observations -- even small ones -- is exactly what helps a doctor move from general concern to targeted assessment. Your everyday observations are clinically valuable. Write them as if they are.
+    </div>
+  </div>
+</div>
+
+<!-- SAVE NOTICE -->
+<div class="save-notice no-print">
+  <svg class="save-notice-icon" viewBox="0 0 20 20" fill="none">
+    <circle cx="10" cy="10" r="8.5" stroke="currentColor" stroke-width="1.4"/>
+    <path d="M10 6v5M10 13.5v.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+  </svg>
+  <div class="save-notice-text">
+    <strong>Save your work before you leave this page.</strong>
+    Systeme.io does not save your responses. Once you leave this page, your notes and selections will not be stored. Use the Print or Save as PDF button at the bottom of your results to keep a copy. This record belongs to you -- it is worth keeping.
+  </div>
+</div>
+
+<!-- SUMMARY PANEL -->
+<div class="summary-panel" id="summary-panel">
+  <p class="summary-title">Your picture for this section</p>
+  <div class="stats-row">
+    <div class="stat-box reg-box"><span class="stat-num" id="count-regular">0</span><span class="stat-lbl">Happening regularly</span></div>
+    <div class="stat-box yes-box"><span class="stat-num" id="count-yes">0</span><span class="stat-lbl">Yes, seen this</span></div>
+    <div class="stat-box some-box"><span class="stat-num" id="count-sometimes">0</span><span class="stat-lbl">Once or twice</span></div>
+    <div class="stat-box"><span class="stat-num" id="count-no">0</span><span class="stat-lbl">Not yet</span></div>
+  </div>
+  <div id="regular-panel" class="regular-panel" style="display:none;">
+    <p class="regular-panel-title">Physical signals happening regularly, these deserve your attention first</p>
+    <ul class="regular-list" id="regular-list"></ul>
+    <p class="regular-note">Physical signals that are happening regularly are not things to monitor indefinitely. They are things to bring to a doctor with your documented observations. The notes you have written in this section are the right starting point for that conversation.</p>
+  </div>
+  <div class="interpretation" id="interpretation-text">Review the signals above and your results will appear here.</div>
+  <p class="next-label">Your next step</p>
+  <div class="next-steps">
+    <button class="next-btn primary no-print" onclick="printGuide()">Print or Save as PDF</button>
+    <button class="next-btn secondary no-print">Continue to Section 2: Changes in Their Mind</button>
+  </div>
+  <div class="action-bar no-print">
+    <button class="action-btn print-btn" onclick="printGuide()">
+      <svg viewBox="0 0 14 14" fill="none"><rect x="2" y="4" width="10" height="7" rx="1" stroke="currentColor" stroke-width="1.2"/><path d="M4 4V2h6v2" stroke="currentColor" stroke-width="1.2"/><path d="M4 9h6M4 11h4" stroke="currentColor" stroke-width="1" stroke-linecap="round"/></svg>
+      Print or Save as PDF
+    </button>
+    <button class="action-btn reset-btn" onclick="resetAll()">
+      <svg viewBox="0 0 14 14" fill="none"><path d="M2 7a5 5 0 1 0 1-3M2 4V7h3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Start this section over
+    </button>
+  </div>
+  <p class="print-reminder no-print">Your notes and responses are not saved automatically. Print or save this page as a PDF before moving to Section 2.</p>
+</div>
+
+</div><!-- /content-area -->
+
+<div class="footer">
+  <p><strong>Genovean</strong> &middot; The Quiet Shift &middot; Phase 1: Awareness</p>
+  <p style="margin-top:5px;">Signal Spotter &middot; Module 3 &middot; Section 1 of 3</p>
+  <p style="margin-top:4px;">genovean.com &middot; &copy; Genovean 2026</p>
+</div>
+
+</div><!-- /page-wrap -->
+
+<script>
+var freqs = {};
+var total = 3;
+var signalLabels = {
+  1: 'How they move, walk, and carry themselves has changed',
+  2: 'Their physical appearance or body has changed noticeably',
+  3: 'Small physical signs in everyday moments that were not there before'
+};
+function toggleCard(n) { document.getElementById('card-'+n).classList.toggle('is-open'); }
+function setFreq(n,val,btn) {
+  freqs[n]=val;
+  var card=document.getElementById('card-'+n);
+  var status=document.getElementById('status-'+n);
+  btn.parentElement.querySelectorAll('.freq-btn').forEach(function(b){b.classList.remove('sel-regular','sel-yes','sel-sometimes','sel-no');});
+  card.classList.remove('is-regular','is-yes','is-sometimes','is-no','is-marked');
+  if(val==='regular'){btn.classList.add('sel-regular');card.classList.add('is-regular','is-marked');status.textContent='Happening regularly';}
+  else if(val==='yes'){btn.classList.add('sel-yes');card.classList.add('is-yes','is-marked');status.textContent='Yes, seen this';}
+  else if(val==='sometimes'){btn.classList.add('sel-sometimes');card.classList.add('is-sometimes','is-marked');status.textContent='Once or twice';}
+  else{btn.classList.add('sel-no');card.classList.add('is-no','is-marked');status.textContent='Not yet';}
+  updateSummary();
+}
+function updateSummary() {
+  var r=0,y=0,s=0,n=0,marked=0,regularSignals=[];
+  for(var k in freqs){marked++;if(freqs[k]==='regular'){r++;regularSignals.push(parseInt(k));}else if(freqs[k]==='yes')y++;else if(freqs[k]==='sometimes')s++;else n++;}
+  document.getElementById('count-regular').textContent=r;
+  document.getElementById('count-yes').textContent=y;
+  document.getElementById('count-sometimes').textContent=s;
+  document.getElementById('count-no').textContent=n;
+  var pct=Math.round((marked/total)*100);
+  document.getElementById('prog-fill').style.width=pct+'%';
+  document.getElementById('prog-pct').textContent=pct+'%';
+  document.getElementById('prog-text').textContent=marked+' of '+total+' signals reviewed';
+  var regPanel=document.getElementById('regular-panel');
+  var regList=document.getElementById('regular-list');
+  if(r>0){regPanel.style.display='block';regList.innerHTML='';regularSignals.sort().forEach(function(idx){var li=document.createElement('li');li.textContent=signalLabels[idx];regList.appendChild(li);});}
+  else{regPanel.style.display='none';}
+  var txt='';
+  if(marked===0){txt='Review the signals above and your results will appear here.';}
+  else if(r>=2){txt='<strong>Two or more physical signals are already recurring patterns.</strong> This is a significant finding. Physical changes that happen regularly, that cluster across movement and appearance and fine motor control, point toward something that warrants a GP conversation with your documented observations. You are not diagnosing anything. You are providing the specific, dated evidence that a doctor needs to move from general concern to targeted assessment. The notes you have written in this section are the right place to start that conversation.';}
+  else if(r===1&&(y+s)>=1){txt='<strong>One physical signal is a recurring pattern, and others have been noticed alongside it.</strong> A single consistent physical change is worth taking to a doctor. Combined with additional observations, it becomes part of a picture that makes a clinical assessment more productive. Make sure your notes for the recurring signal are as specific as possible before you move to Section 2.';}
+  else if(r===1){txt='<strong>One physical signal is already a recurring pattern.</strong> Even a single consistent change in movement, appearance, or physical ability deserves to be documented carefully and, if it continues, raised with a GP. Write as much specific detail as you have for this signal and continue to Section 2.';}
+  else if(y>=2||(y>=1&&s>=1)){txt='<strong>Multiple physical signals have been noticed.</strong> Even if nothing is happening every day, two or more physical observations in this section represent a meaningful pattern worth continuing to document. The detail in your notes is what turns observation into something useful. Continue to Section 2.';}
+  else if(y===1||s>=1){txt='A physical change has been noticed. Record it with as much specific detail as you can and continue building the wider picture in Section 2.';}
+  else if(n===marked){txt='Nothing in the physical domain has stood out yet. That is genuinely useful information. Continue to Section 2, the picture builds across all three sections of this module.';}
+  else{txt='Keep working through the signals. Your picture will form as you go.';}
+  document.getElementById('interpretation-text').innerHTML=txt;
+}
+function printGuide(){
+  var w=window.open('','_blank');
+  if(w){w.document.open();w.document.write(document.documentElement.outerHTML);w.document.close();w.focus();setTimeout(function(){w.print();},600);}
+  else{window.print();}
+}
+function resetAll(){
+  if(!confirm('Clear all your responses for this section and start again?'))return;
+  freqs={};
+  for(var i=1;i<=total;i++){
+    var card=document.getElementById('card-'+i);
+    card.classList.remove('is-regular','is-yes','is-sometimes','is-no','is-marked','is-open');
+    document.getElementById('status-'+i).textContent='Not reviewed';
+    card.querySelectorAll('.freq-btn').forEach(function(b){b.classList.remove('sel-regular','sel-yes','sel-sometimes','sel-no');});
+    card.querySelectorAll('.notes-field').forEach(function(t){t.value='';});
+  }
+  ['count-regular','count-yes','count-sometimes','count-no'].forEach(function(id){document.getElementById(id).textContent='0';});
+  document.getElementById('prog-fill').style.width='0%';
+  document.getElementById('prog-pct').textContent='0%';
+  document.getElementById('prog-text').textContent='0 of 3 signals reviewed';
+  document.getElementById('regular-panel').style.display='none';
+  document.getElementById('regular-list').innerHTML='';
+  document.getElementById('interpretation-text').innerHTML='Review the signals above and your results will appear here.';
+}
+</script>
+</body>
+</html>

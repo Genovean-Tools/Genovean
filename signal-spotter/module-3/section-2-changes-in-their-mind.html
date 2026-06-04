@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Signal Spotter: Changes in Their Mind -- Genovean</title>
+<style>
+:root {
+  --g-dark:    #1A3A2A;
+  --g-mid:     #1D9E75;
+  --g-light:   #E1F5EE;
+  --g-sand:    #F5F0E8;
+  --g-warm:    #C8B89A;
+  --g-text:    #1C1C1A;
+  --g-muted:   #5A5A56;
+  --g-subtle:  #8A8A84;
+  --g-border:  #D8D4C8;
+  --g-white:   #FFFFFF;
+  --g-amber:   #FAEEDA;
+  --g-amber-t: #633806;
+  --g-amber-b: #BA7517;
+  --g-red-bg:  #FEF3F3;
+  --g-red-bdr: #E8AAAA;
+  --g-red-t:   #7A2020;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: Georgia, 'Times New Roman', serif; background: var(--g-sand); color: var(--g-text); line-height: 1.65; font-size: 15px; }
+@media print {
+  body { background: #fff; font-size: 11pt; }
+  .no-print { display: none !important; }
+  .signal-card { break-inside: avoid; page-break-inside: avoid; }
+  .header-bar { background: #1A3A2A !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .section-band { background: #E1F5EE !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .detail-body { display: block !important; }
+  .freq-row { display: flex !important; }
+  .notes-field { min-height: 60px !important; border: 1px solid #ccc !important; }
+  .summary-panel { background: #1A3A2A !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .regular-panel { background: #7A2020 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .save-notice { background: #FAEEDA !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .page-wrap { max-width: 100%; padding: 0; }
+  a { color: inherit; text-decoration: none; }
+}
+.page-wrap { max-width: 780px; margin: 0 auto; padding: 0 0 60px; }
+.header-bar { background: var(--g-dark); color: #fff; padding: 22px 36px 20px; }
+.header-top { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 10px; margin-bottom: 14px; }
+.brand-name { font-family: Georgia, serif; font-size: 13px; font-weight: normal; letter-spacing: .12em; text-transform: uppercase; color: var(--g-warm); }
+.header-nav { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.course-crumb { font-size: 10px; letter-spacing: .08em; text-transform: uppercase; color: rgba(255,255,255,.4); }
+.crumb-sep { color: rgba(255,255,255,.2); font-size: 10px; }
+.crumb-active { font-size: 10px; letter-spacing: .08em; text-transform: uppercase; color: var(--g-warm); font-weight: bold; }
+.section-tag { font-size: 11px; font-weight: bold; letter-spacing: .1em; text-transform: uppercase; background: rgba(255,255,255,.12); color: var(--g-warm); padding: 3px 11px; border-radius: 20px; }
+.tool-title { font-family: Georgia, serif; font-size: 26px; font-weight: normal; color: #fff; letter-spacing: -.02em; margin-bottom: 7px; line-height: 1.2; }
+.tool-subtitle { font-size: 13.5px; color: rgba(255,255,255,.62); max-width: 520px; line-height: 1.6; }
+.progress-wrap { background: var(--g-white); border-bottom: 1px solid var(--g-border); padding: 11px 36px; display: flex; align-items: center; gap: 16px; font-size: 12px; color: var(--g-subtle); position: sticky; top: 0; z-index: 10; }
+.progress-track { flex: 1; height: 5px; background: var(--g-border); border-radius: 3px; overflow: hidden; }
+.progress-fill { height: 100%; background: var(--g-mid); border-radius: 3px; width: 0%; transition: width .3s ease; }
+.progress-label { white-space: nowrap; font-size: 12px; color: var(--g-subtle); min-width: 80px; text-align: right; }
+.content-area { padding: 0 36px; }
+.section-band { display: flex; align-items: center; gap: 10px; background: var(--g-light); padding: 9px 36px; margin: 24px -36px 14px; font-size: 11px; font-weight: bold; letter-spacing: .1em; text-transform: uppercase; color: #085041; }
+.section-icon { width: 18px; height: 18px; border-radius: 50%; background: var(--g-mid); display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.section-icon svg { width: 10px; height: 10px; }
+.signal-card { background: var(--g-white); border: 1px solid var(--g-border); border-radius: var(--radius-md); margin-bottom: 10px; overflow: hidden; transition: border-color .15s; }
+.signal-card.is-marked  { border-color: var(--g-mid); }
+.signal-card.is-regular { border-color: #C0392B; }
+.signal-card.is-no      { border-color: var(--g-border); }
+.signal-header { display: flex; align-items: center; gap: 12px; padding: 13px 16px; cursor: pointer; user-select: none; background: var(--g-white); transition: background .12s; }
+.signal-header:hover { background: #fafaf7; }
+.signal-num { width: 24px; height: 24px; border-radius: 50%; background: var(--g-sand); border: 1px solid var(--g-border); font-size: 11px; font-weight: bold; color: var(--g-subtle); display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: background .15s, color .15s; font-family: Georgia, serif; }
+.signal-card.is-regular .signal-num   { background: #C0392B; border-color: #C0392B; color: #fff; }
+.signal-card.is-yes .signal-num       { background: var(--g-mid); border-color: var(--g-mid); color: #fff; }
+.signal-card.is-sometimes .signal-num { background: var(--g-amber-b); border-color: var(--g-amber-b); color: #fff; }
+.signal-card.is-no .signal-num        { background: var(--g-border); border-color: var(--g-border); color: var(--g-subtle); }
+.signal-label { flex: 1; font-size: 14px; font-weight: normal; font-family: Georgia, serif; color: var(--g-text); line-height: 1.4; }
+.signal-status { font-size: 11px; color: var(--g-subtle); white-space: nowrap; font-family: Georgia, serif; }
+.signal-card.is-regular .signal-status  { color: #C0392B; font-weight: bold; }
+.signal-card.is-yes .signal-status      { color: #0F6E56; font-weight: bold; }
+.signal-card.is-sometimes .signal-status{ color: var(--g-amber-b); font-weight: bold; }
+.chevron { width: 16px; height: 16px; color: var(--g-border); flex-shrink: 0; transition: transform .2s; }
+.signal-card.is-open .chevron { transform: rotate(180deg); }
+.detail-body { display: none; padding: 0 16px 18px; border-top: 1px solid var(--g-border); }
+.signal-card.is-open .detail-body { display: block; }
+.signal-desc { font-size: 13.5px; color: var(--g-muted); line-height: 1.75; padding: 15px 0 13px; font-family: Georgia, serif; }
+.guidance-box { background: var(--g-sand); border-left: 3px solid var(--g-warm); padding: 12px 15px; margin-bottom: 8px; border-radius: 0 var(--radius-sm) var(--radius-sm) 0; }
+.guidance-label { font-size: 10px; font-weight: bold; letter-spacing: .1em; text-transform: uppercase; color: var(--g-subtle); margin-bottom: 5px; font-family: Georgia, serif; }
+.guidance-text { font-size: 13px; color: var(--g-muted); line-height: 1.65; font-family: Georgia, serif; }
+.observe-box { background: var(--g-light); border-left: 3px solid var(--g-mid); padding: 12px 15px; margin-bottom: 14px; border-radius: 0 var(--radius-sm) var(--radius-sm) 0; }
+.observe-label { font-size: 10px; font-weight: bold; letter-spacing: .1em; text-transform: uppercase; color: #085041; margin-bottom: 5px; font-family: Georgia, serif; }
+.observe-text { font-size: 13px; color: #1A4A38; line-height: 1.65; font-family: Georgia, serif; }
+.freq-label { font-size: 11px; font-weight: bold; letter-spacing: .08em; text-transform: uppercase; color: var(--g-subtle); margin-bottom: 8px; font-family: Georgia, serif; }
+.freq-row { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+.freq-btn { flex: 1; min-width: 90px; padding: 9px 10px; font-size: 12px; border: 1px solid var(--g-border); border-radius: var(--radius-sm); background: var(--g-white); color: var(--g-muted); cursor: pointer; text-align: center; font-family: Georgia, serif; transition: background .12s, border-color .12s, color .12s; line-height: 1.3; }
+.freq-btn:hover { background: var(--g-sand); }
+.freq-btn.sel-regular   { background: var(--g-red-bg); border-color: #C0392B; color: var(--g-red-t); font-weight: bold; }
+.freq-btn.sel-yes       { background: var(--g-light); border-color: var(--g-mid); color: #085041; font-weight: bold; }
+.freq-btn.sel-sometimes { background: var(--g-amber); border-color: var(--g-amber-b); color: var(--g-amber-t); font-weight: bold; }
+.freq-btn.sel-no        { background: var(--g-sand); border-color: var(--g-border); color: var(--g-subtle); font-style: italic; }
+.notes-label { font-size: 11px; font-weight: bold; letter-spacing: .08em; text-transform: uppercase; color: var(--g-subtle); margin-bottom: 8px; font-family: Georgia, serif; }
+.notes-example { background: var(--g-sand); border: 1px dashed var(--g-border); border-radius: var(--radius-sm); padding: 11px 14px; margin-bottom: 10px; }
+.notes-example-label { font-size: 10px; font-weight: bold; letter-spacing: .09em; text-transform: uppercase; color: var(--g-subtle); margin-bottom: 5px; font-family: Georgia, serif; }
+.notes-example-text { font-size: 12.5px; color: var(--g-muted); line-height: 1.65; font-family: Georgia, serif; font-style: italic; }
+.notes-field { width: 100%; min-height: 80px; border: 1px solid var(--g-border); border-radius: var(--radius-sm); padding: 10px 12px; font-size: 13px; font-family: Georgia, serif; color: var(--g-text); background: var(--g-white); resize: vertical; line-height: 1.55; transition: border-color .15s; }
+.notes-field:focus { outline: none; border-color: var(--g-mid); }
+.notes-field::placeholder { color: var(--g-subtle); font-style: italic; }
+.notes-why { margin-top: 9px; padding: 10px 14px; background: var(--g-white); border: 1px solid var(--g-border); border-radius: var(--radius-sm); font-size: 12px; color: var(--g-subtle); line-height: 1.65; font-family: Georgia, serif; }
+.notes-why strong { color: var(--g-muted); }
+.save-notice { background: var(--g-amber); border: 1px solid var(--g-amber-b); border-radius: var(--radius-md); padding: 15px 18px; margin-top: 28px; display: flex; gap: 13px; align-items: flex-start; }
+.save-notice-icon { width: 20px; height: 20px; flex-shrink: 0; margin-top: 1px; color: var(--g-amber-b); }
+.save-notice-text { font-size: 13px; color: var(--g-amber-t); line-height: 1.65; font-family: Georgia, serif; }
+.save-notice-text strong { color: #633806; display: block; margin-bottom: 3px; font-size: 13.5px; }
+.summary-panel { background: var(--g-dark); border-radius: var(--radius-lg); padding: 26px 28px; margin-top: 14px; color: #fff; }
+.summary-title { font-family: Georgia, serif; font-size: 18px; font-weight: normal; color: #fff; margin-bottom: 18px; letter-spacing: -.01em; }
+.stats-row { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; margin-bottom: 20px; }
+.stat-box { background: rgba(255,255,255,.08); border-radius: var(--radius-md); padding: 13px 10px; text-align: center; }
+.stat-num { font-family: Georgia, serif; font-size: 26px; font-weight: normal; display: block; margin-bottom: 3px; color: #fff; }
+.stat-box.reg-box .stat-num  { color: #F4A4A4; }
+.stat-box.yes-box .stat-num  { color: #5DCAA5; }
+.stat-box.some-box .stat-num { color: #FAC775; }
+.stat-lbl { font-size: 10px; color: rgba(255,255,255,.5); letter-spacing: .05em; text-transform: uppercase; }
+.regular-panel { background: rgba(192,57,43,.25); border: 1px solid rgba(192,57,43,.5); border-radius: var(--radius-md); padding: 15px 18px; margin-bottom: 18px; }
+.regular-panel-title { font-size: 12px; font-weight: bold; letter-spacing: .08em; text-transform: uppercase; color: #F4A4A4; margin-bottom: 10px; font-family: Georgia, serif; }
+.regular-list { list-style: none; }
+.regular-list li { font-size: 13px; color: rgba(255,255,255,.85); padding: 5px 0; border-bottom: 1px solid rgba(255,255,255,.08); display: flex; gap: 9px; align-items: flex-start; font-family: Georgia, serif; line-height: 1.45; }
+.regular-list li:last-child { border-bottom: none; }
+.regular-list li::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: #F4A4A4; flex-shrink: 0; margin-top: 6px; }
+.regular-note { font-size: 12px; color: rgba(255,255,255,.55); margin-top: 10px; line-height: 1.65; font-family: Georgia, serif; }
+.interpretation { background: rgba(255,255,255,.07); border-left: 3px solid var(--g-mid); padding: 13px 16px; border-radius: 0 var(--radius-sm) var(--radius-sm) 0; font-size: 13.5px; color: rgba(255,255,255,.82); line-height: 1.65; font-family: Georgia, serif; margin-bottom: 20px; }
+.interpretation strong { color: #fff; }
+.next-label { font-size: 11px; font-weight: bold; letter-spacing: .1em; text-transform: uppercase; color: rgba(255,255,255,.4); margin-bottom: 10px; }
+.next-steps { display: flex; gap: 10px; flex-wrap: wrap; }
+.next-btn { padding: 9px 18px; font-size: 13px; border-radius: var(--radius-sm); cursor: pointer; font-family: Georgia, serif; border: none; transition: opacity .15s; }
+.next-btn:hover { opacity: .88; }
+.next-btn.primary   { background: var(--g-mid); color: #fff; }
+.next-btn.secondary { background: rgba(255,255,255,.12); color: rgba(255,255,255,.82); border: 1px solid rgba(255,255,255,.2); }
+.action-bar { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 22px; padding-top: 18px; border-top: 1px solid rgba(255,255,255,.1); }
+.action-btn { padding: 10px 18px; font-size: 13px; border-radius: var(--radius-sm); cursor: pointer; font-family: Georgia, serif; display: flex; align-items: center; gap: 7px; transition: opacity .15s; border: none; }
+.action-btn svg { width: 14px; height: 14px; }
+.action-btn.print-btn { background: var(--g-mid); color: #fff; }
+.action-btn.print-btn:hover { opacity: .88; }
+.action-btn.reset-btn { background: rgba(255,255,255,.1); color: rgba(255,255,255,.7); }
+.action-btn.reset-btn:hover { background: rgba(255,255,255,.16); }
+.print-reminder { font-size: 12px; color: rgba(255,255,255,.45); margin-top: 10px; line-height: 1.65; font-family: Georgia, serif; }
+.footer { text-align: center; padding: 26px 36px 0; font-size: 12px; color: var(--g-subtle); font-family: Georgia, serif; border-top: 1px solid var(--g-border); margin-top: 32px; }
+.footer strong { color: var(--g-muted); }
+@media (max-width: 540px) {
+  .header-bar, .content-area, .section-band { padding-left: 18px; padding-right: 18px; }
+  .section-band { margin-left: -18px; margin-right: -18px; }
+  .tool-title { font-size: 22px; }
+  .progress-wrap { padding-left: 18px; padding-right: 18px; }
+  .stats-row { grid-template-columns: 1fr 1fr; }
+  .stat-num { font-size: 22px; }
+  .freq-btn { min-width: 80px; font-size: 11px; }
+}
+</style>
+</head>
+<body>
+<div class="page-wrap">
+
+<div class="header-bar">
+  <div class="header-top">
+    <span class="brand-name">Genovean</span>
+    <div class="header-nav">
+      <span class="course-crumb">Seeing It Clearly</span>
+      <span class="crumb-sep">/</span>
+      <span class="course-crumb">Module 3</span>
+      <span class="crumb-sep">/</span>
+      <span class="crumb-active">Section 2 of 3</span>
+    </div>
+    <span class="section-tag">Phase 1 &middot; Awareness</span>
+  </div>
+  <h1 class="tool-title">Signal Spotter: Changes in Their Mind</h1>
+  <p class="tool-subtitle">Cognitive and behavioural changes are the signals families notice most clearly and name most reluctantly. This section asks you to set that reluctance aside and record what you have actually been seeing.</p>
+</div>
+
+<div class="progress-wrap no-print">
+  <span id="prog-text" style="white-space:nowrap;font-size:12px;color:#8A8A84;">0 of 3 signals reviewed</span>
+  <div class="progress-track"><div class="progress-fill" id="prog-fill"></div></div>
+  <span class="progress-label" id="prog-pct">0%</span>
+</div>
+
+<div class="content-area">
+
+<div class="section-band">
+  <span class="section-icon">
+    <svg viewBox="0 0 10 10" fill="none">
+      <circle cx="5" cy="4.5" r="3" stroke="#fff" stroke-width="1.2"/>
+      <path d="M3.5 8.5c0-1 .7-1.5 1.5-1.5s1.5.5 1.5 1.5" stroke="#fff" stroke-width="1" stroke-linecap="round"/>
+    </svg>
+  </span>
+  Changes in Their Mind
+</div>
+
+<!-- SIGNAL 1 -->
+<div class="signal-card" id="card-1">
+  <div class="signal-header" onclick="toggleCard(1)">
+    <span class="signal-num">1</span>
+    <span class="signal-label">Memory and recall have changed in ways that go beyond normal forgetfulness</span>
+    <span class="signal-status" id="status-1">Not reviewed</span>
+    <svg class="chevron" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+  </div>
+  <div class="detail-body">
+    <p class="signal-desc">Forgetting a name and remembering it ten minutes later is normal. Forgetting a conversation that happened yesterday and having no sense that it took place at all is not. The distinction between normal age-related forgetfulness and memory change that signals something more significant is one of the most important things this section asks you to consider. Normal forgetfulness is brief, recoverable, and proportionate -- you forget where you put your keys and then you find them. Memory change that warrants attention is different in quality: whole events are absent, not just temporarily mislaid. Conversations that happened recently are not just forgotten but genuinely absent from experience. The same question is asked multiple times within a single conversation, not because the person is distracted but because they have no memory that they already asked it. The same story is told at every visit, word for word, with the same sense of it being new. Confusion about time -- what day it is, what year it is, what season -- in a way that goes beyond momentary disorientation. Difficulty recognising people or places that should be completely familiar. These are the signals. They are often the hardest to write down, because writing them down means acknowledging something most families would rather not name.</p>
+    <div class="guidance-box">
+      <p class="guidance-label">What distinguishes significant memory change from normal forgetting</p>
+      <p class="guidance-text">Ask yourself these questions about what you have observed: Does the forgetting recover -- do they remember later, or is the thing simply gone? Is it proportionate -- forgetting a name is different from forgetting an entire conversation. Is it new -- has memory always been their weakness, or is this a change from how they used to be? Is it distressing to them -- do they seem aware that something is wrong, or are they unaware? And critically: is it happening more frequently over time? Normal forgetfulness does not significantly worsen over months. Memory change that signals a clinical concern usually does.</p>
+    </div>
+    <div class="observe-box">
+      <p class="observe-label">How to observe and record this without making them feel tested</p>
+      <p class="observe-text">Do not ask questions designed to test memory. Do not repeat information to see if they retain it. Your parent's dignity in conversation matters, and testing them directly damages trust without giving you better information than careful observation would. Instead, pay attention naturally. Notice what they remember and what they do not. Record what you observe after you leave, not during the conversation. The most useful observations are the ones made without the person knowing they are being observed.</p>
+    </div>
+    <p class="freq-label">How often have you noticed this?</p>
+    <div class="freq-row">
+      <button class="freq-btn" onclick="setFreq(1,'regular',this)">Happening regularly</button>
+      <button class="freq-btn" onclick="setFreq(1,'yes',this)">Yes, I have seen this</button>
+      <button class="freq-btn" onclick="setFreq(1,'sometimes',this)">Once or twice</button>
+      <button class="freq-btn" onclick="setFreq(1,'no',this)">Not yet</button>
+    </div>
+    <p class="notes-label">Your notes</p>
+    <div class="notes-example">
+      <p class="notes-example-label">Example of a useful note</p>
+      <p class="notes-example-text">"She asked me three times during our visit on Sunday whether my daughter was still at the same school. Each time I answered as if she had not asked before. She had no awareness that she had asked. She also mentioned a conversation we had last Tuesday as if it had not happened -- I had told her something significant and she had no memory of it at all. This is not her misplacing a name. The conversations are simply not there."</p>
+    </div>
+    <textarea class="notes-field" placeholder="Describe specifically what you have observed about memory. What was forgotten? How completely? Was the event absent entirely or just imprecise? Has this happened more than once? How does it compare to how their memory used to work?" oninput="updateSummary()"></textarea>
+    <div class="notes-why">
+      <strong>Why this note matters.</strong> A GP assessing cognitive function will ask you what you have observed. The difference between "she seems a bit forgetful lately" and "she asked the same question three times in thirty minutes with no awareness of having asked it before" is the difference between a general concern and a clinical observation. Write it at the level of the second.
+    </div>
+  </div>
+</div>
+
+<!-- SIGNAL 2 -->
+<div class="signal-card" id="card-2">
+  <div class="signal-header" onclick="toggleCard(2)">
+    <span class="signal-num">2</span>
+    <span class="signal-label">How they think, follow conversations, and manage decisions has changed</span>
+    <span class="signal-status" id="status-2">Not reviewed</span>
+    <svg class="chevron" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+  </div>
+  <div class="detail-body">
+    <p class="signal-desc">This signal is about the quality of thinking rather than the loss of specific memories. It shows up in conversations that are harder to follow than they used to be -- not because the topic is complex, but because the thread is harder for them to hold. It shows up in decisions that take longer, involve more confusion, or that produce outcomes that are out of character -- agreeing to something they would have questioned, being unable to make a choice about something straightforward, or reversing decisions without a clear reason. It shows up in tasks that used to be routine -- planning a journey, managing a schedule, organising a small event -- that now feel overwhelming or produce results that do not make sense. It shows up as difficulty following a film or a news programme that they used to engage with easily. As losing the thread of what they were saying mid-sentence. As struggling to find a word they clearly know, in a way that is new and more frequent than before. These are not the same as memory loss. They are changes in executive function and processing speed -- the parts of thinking that organise, sequence, and make sense of information. They are often the signals that appear before more obvious memory changes do, and they are often the ones families overlook because they can be mistaken for tiredness, distraction, or personality.</p>
+    <div class="guidance-box">
+      <p class="guidance-label">What to look for in conversation and in everyday tasks</p>
+      <p class="guidance-text">Listen to how they follow a conversation rather than what they say. Do they lose track of topics? Do they seem confused by a change of subject? Are they asking you to repeat things more than before? Watch how they handle tasks that involve more than one step. Making a cup of tea, following a recipe, planning what they need from a shop -- these are multi-step executive tasks. If any of them have become noticeably harder, that is the signal. Watch for word-finding difficulty -- the mid-sentence pause, the gesture that replaces the word they cannot reach, the substitution of a related word or a description for the thing they cannot name.</p>
+    </div>
+    <div class="observe-box">
+      <p class="observe-label">How to record this without interpreting too quickly</p>
+      <p class="observe-text">The temptation with thinking-related observations is to leap immediately to what it might mean. Resist that. Describe what you saw -- the specific moment, the specific difficulty, the specific thing that was different. A note that says "she seemed confused" is not useful. A note that says "she started to tell me something and then lost the thread completely mid-sentence, paused for a long moment, and then changed the subject without returning to it -- this happened twice in the same conversation" is useful. The specificity of the observation is what matters.</p>
+    </div>
+    <p class="freq-label">How often have you noticed this?</p>
+    <div class="freq-row">
+      <button class="freq-btn" onclick="setFreq(2,'regular',this)">Happening regularly</button>
+      <button class="freq-btn" onclick="setFreq(2,'yes',this)">Yes, I have seen this</button>
+      <button class="freq-btn" onclick="setFreq(2,'sometimes',this)">Once or twice</button>
+      <button class="freq-btn" onclick="setFreq(2,'no',this)">Not yet</button>
+    </div>
+    <p class="notes-label">Your notes</p>
+    <div class="notes-example">
+      <p class="notes-example-label">Example of a useful note</p>
+      <p class="notes-example-text">"He has become much harder to have a back-and-forth conversation with. He loses the thread regularly, particularly when a topic changes. He starts sentences and trails off, or finishes them with something that does not connect to how they started. He also cannot seem to make simple decisions anymore -- I asked him where he wanted to go for lunch and after twenty minutes he still had not decided and became visibly agitated. He used to be decisive and articulate. These are not the same qualities I am seeing now."</p>
+    </div>
+    <textarea class="notes-field" placeholder="Describe specific moments where their thinking seemed different. What were they trying to do or say? What happened? What was different about it compared to how they used to manage the same kind of thing?" oninput="updateSummary()"></textarea>
+    <div class="notes-why">
+      <strong>Why this note matters.</strong> Executive function changes are often the first cognitive signals to appear and the last to be named clearly by families. They look like personality, like tiredness, like distraction. Writing down the specific moments where thinking has been observably different gives a clinician exactly what they need to assess what is happening and how far it has progressed.
+    </div>
+  </div>
+</div>
+
+<!-- SIGNAL 3 -->
+<div class="signal-card" id="card-3">
+  <div class="signal-header" onclick="toggleCard(3)">
+    <span class="signal-num">3</span>
+    <span class="signal-label">Their personality, mood, or behaviour has changed in ways that are new and persistent</span>
+    <span class="signal-status" id="status-3">Not reviewed</span>
+    <svg class="chevron" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+  </div>
+  <div class="detail-body">
+    <p class="signal-desc">A parent who was patient becoming irritable. A parent who was sociable and engaged becoming withdrawn and flat. A parent who was cautious and careful with money becoming suddenly impulsive or careless with it. A parent who was warm and affectionate becoming cold or suspicious. Increased anxiety about things that never used to worry them. Increased suspicion of people they have always trusted. A persistent low mood that is not attached to a specific event and does not lift. Behaviours that feel out of character -- hoarding, accusations, disinhibition, repetitive actions. These personality and behavioural changes are among the most emotionally difficult signals in this module to record, because they touch the relationship directly. You are not just observing a parent who is struggling. You are observing a parent who is, in some ways, becoming someone different from the person you have known. That is a loss that happens before the larger losses do, and it rarely gets named for what it is. This section asks you to name it.</p>
+    <div class="guidance-box">
+      <p class="guidance-label">What makes a personality change significant</p>
+      <p class="guidance-text">The key question is whether the change is new, persistent, and clearly different from their established character. A person who was always anxious becoming more anxious is different from a person who was always calm suddenly developing significant anxiety. A person who was occasionally short-tempered having a bad period is different from a fundamentally even-tempered person becoming consistently irritable in a way that has lasted months. The change you are looking for is one that represents a departure from who this person has reliably been -- not a temporary shift, but a new characteristic that has settled in and stayed.</p>
+    </div>
+    <div class="observe-box">
+      <p class="observe-label">How to observe and record without making it about the relationship</p>
+      <p class="observe-text">It is easy when writing about personality changes to slip into writing about the relationship -- how the change has affected you, how it makes visits harder, what you feel about who they have become. Those feelings are real and they matter, but this note is not the place for them. Module 4 is. Here, focus on describing the behaviour itself -- what specifically changed, when you first noticed it, how consistently it appears, what triggers it if you can identify any, and how it compares to who they used to be. The more clearly you can describe the behaviour without the emotional response to it, the more clinically useful the observation becomes.</p>
+    </div>
+    <p class="freq-label">How often have you noticed this?</p>
+    <div class="freq-row">
+      <button class="freq-btn" onclick="setFreq(3,'regular',this)">Happening regularly</button>
+      <button class="freq-btn" onclick="setFreq(3,'yes',this)">Yes, I have seen this</button>
+      <button class="freq-btn" onclick="setFreq(3,'sometimes',this)">Once or twice</button>
+      <button class="freq-btn" onclick="setFreq(3,'no',this)">Not yet</button>
+    </div>
+    <p class="notes-label">Your notes</p>
+    <div class="notes-example">
+      <p class="notes-example-label">Example of a useful note</p>
+      <p class="notes-example-text">"She has become suspicious of people she has always trusted. She mentioned last month that she thought a neighbour had been in her flat, which is not possible. She has become secretive about her post and her phone in a way that is completely new. She was always open and trusting -- this is the opposite of that. She is also more anxious generally. She calls me several times a day sometimes with things that could wait or do not need a call at all. This started about eight months ago and has been consistent and increasing, not intermittent."</p>
+    </div>
+    <textarea class="notes-field" placeholder="Describe the personality or behavioural change specifically. What is different? When did it start? How persistent is it? Is it new to their character, or an amplification of something that was always there? Write what you observe, not what you feel about it." oninput="updateSummary()"></textarea>
+    <div class="notes-why">
+      <strong>Why this note matters.</strong> Personality and behavioural changes are frequently the earliest indicators of specific conditions -- including some that are highly treatable when identified early. A note that describes the specific change, its onset, and its persistence gives a clinician information they cannot get from a brief appointment. Your detailed observation here is not just useful. In some cases it is what makes the difference between early identification and a much later one.
+    </div>
+  </div>
+</div>
+
+<!-- SAVE NOTICE -->
+<div class="save-notice no-print">
+  <svg class="save-notice-icon" viewBox="0 0 20 20" fill="none">
+    <circle cx="10" cy="10" r="8.5" stroke="currentColor" stroke-width="1.4"/>
+    <path d="M10 6v5M10 13.5v.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+  </svg>
+  <div class="save-notice-text">
+    <strong>Save your work before you leave this page.</strong>
+    Systeme.io does not save your responses. Once you leave this page, your notes and selections will not be stored. Use the Print or Save as PDF button at the bottom of your results to keep a copy. This record belongs to you -- it is worth keeping.
+  </div>
+</div>
+
+<!-- SUMMARY PANEL -->
+<div class="summary-panel" id="summary-panel">
+  <p class="summary-title">Your picture for this section</p>
+  <div class="stats-row">
+    <div class="stat-box reg-box"><span class="stat-num" id="count-regular">0</span><span class="stat-lbl">Happening regularly</span></div>
+    <div class="stat-box yes-box"><span class="stat-num" id="count-yes">0</span><span class="stat-lbl">Yes, seen this</span></div>
+    <div class="stat-box some-box"><span class="stat-num" id="count-sometimes">0</span><span class="stat-lbl">Once or twice</span></div>
+    <div class="stat-box"><span class="stat-num" id="count-no">0</span><span class="stat-lbl">Not yet</span></div>
+  </div>
+  <div id="regular-panel" class="regular-panel" style="display:none;">
+    <p class="regular-panel-title">Cognitive or behavioural signals happening regularly -- these deserve professional attention</p>
+    <ul class="regular-list" id="regular-list"></ul>
+    <p class="regular-note">Cognitive and behavioural signals that are consistent and recurring are not things to monitor at a distance indefinitely. Your documented observations -- specific, dated, and honest -- are exactly what a GP or specialist needs to assess what is happening and recommend the right next steps.</p>
+  </div>
+  <div class="interpretation" id="interpretation-text">Review the signals above and your results will appear here.</div>
+  <p class="next-label">Your next step</p>
+  <div class="next-steps">
+    <button class="next-btn primary no-print" onclick="printGuide()">Print or Save as PDF</button>
+    <button class="next-btn secondary no-print">Continue to Section 3: When Things Accelerate</button>
+  </div>
+  <div class="action-bar no-print">
+    <button class="action-btn print-btn" onclick="printGuide()">
+      <svg viewBox="0 0 14 14" fill="none"><rect x="2" y="4" width="10" height="7" rx="1" stroke="currentColor" stroke-width="1.2"/><path d="M4 4V2h6v2" stroke="currentColor" stroke-width="1.2"/><path d="M4 9h6M4 11h4" stroke="currentColor" stroke-width="1" stroke-linecap="round"/></svg>
+      Print or Save as PDF
+    </button>
+    <button class="action-btn reset-btn" onclick="resetAll()">
+      <svg viewBox="0 0 14 14" fill="none"><path d="M2 7a5 5 0 1 0 1-3M2 4V7h3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Start this section over
+    </button>
+  </div>
+  <p class="print-reminder no-print">Your notes and responses are not saved automatically. Print or save this page as a PDF before moving to Section 3.</p>
+</div>
+
+</div><!-- /content-area -->
+
+<div class="footer">
+  <p><strong>Genovean</strong> &middot; The Quiet Shift &middot; Phase 1: Awareness</p>
+  <p style="margin-top:5px;">Signal Spotter &middot; Module 3 &middot; Section 2 of 3</p>
+  <p style="margin-top:4px;">genovean.com &middot; &copy; Genovean 2026</p>
+</div>
+
+</div><!-- /page-wrap -->
+
+<script>
+var freqs = {};
+var total = 3;
+var signalLabels = {
+  1: 'Memory and recall have changed in ways that go beyond normal forgetfulness',
+  2: 'How they think, follow conversations, and manage decisions has changed',
+  3: 'Their personality, mood, or behaviour has changed in ways that are new and persistent'
+};
+function toggleCard(n) { document.getElementById('card-'+n).classList.toggle('is-open'); }
+function setFreq(n,val,btn) {
+  freqs[n]=val;
+  var card=document.getElementById('card-'+n);
+  var status=document.getElementById('status-'+n);
+  btn.parentElement.querySelectorAll('.freq-btn').forEach(function(b){b.classList.remove('sel-regular','sel-yes','sel-sometimes','sel-no');});
+  card.classList.remove('is-regular','is-yes','is-sometimes','is-no','is-marked');
+  if(val==='regular'){btn.classList.add('sel-regular');card.classList.add('is-regular','is-marked');status.textContent='Happening regularly';}
+  else if(val==='yes'){btn.classList.add('sel-yes');card.classList.add('is-yes','is-marked');status.textContent='Yes, seen this';}
+  else if(val==='sometimes'){btn.classList.add('sel-sometimes');card.classList.add('is-sometimes','is-marked');status.textContent='Once or twice';}
+  else{btn.classList.add('sel-no');card.classList.add('is-no','is-marked');status.textContent='Not yet';}
+  updateSummary();
+}
+function updateSummary() {
+  var r=0,y=0,s=0,n=0,marked=0,regularSignals=[];
+  for(var k in freqs){marked++;if(freqs[k]==='regular'){r++;regularSignals.push(parseInt(k));}else if(freqs[k]==='yes')y++;else if(freqs[k]==='sometimes')s++;else n++;}
+  document.getElementById('count-regular').textContent=r;
+  document.getElementById('count-yes').textContent=y;
+  document.getElementById('count-sometimes').textContent=s;
+  document.getElementById('count-no').textContent=n;
+  var pct=Math.round((marked/total)*100);
+  document.getElementById('prog-fill').style.width=pct+'%';
+  document.getElementById('prog-pct').textContent=pct+'%';
+  document.getElementById('prog-text').textContent=marked+' of '+total+' signals reviewed';
+  var regPanel=document.getElementById('regular-panel');
+  var regList=document.getElementById('regular-list');
+  if(r>0){regPanel.style.display='block';regList.innerHTML='';regularSignals.sort().forEach(function(idx){var li=document.createElement('li');li.textContent=signalLabels[idx];regList.appendChild(li);});}
+  else{regPanel.style.display='none';}
+  var txt='';
+  if(marked===0){txt='Review the signals above and your results will appear here.';}
+  else if(r>=2){txt='<strong>Two or more cognitive or behavioural signals are already recurring patterns.</strong> This is the section of this course where the picture you have been building becomes most important. What you have documented here -- specific, consistent, clearly different from their baseline -- is the kind of information that moves a GP from a general conversation to a targeted cognitive assessment. Do not carry this alone. The notes you have made in this section are ready to be shared with a professional.';}
+  else if(r===1&&(y+s)>=1){txt='<strong>One cognitive signal is already a consistent pattern, and you have noticed others alongside it.</strong> That combination is clinically significant. A recurring change in memory, thinking, or personality is not something to monitor indefinitely at a distance. Your documented observations give a GP exactly what they need. Print this section and bring it to an appointment.';}
+  else if(r===1){txt='<strong>One cognitive or behavioural signal is already a recurring pattern.</strong> Cognitive signals that repeat consistently are the ones that warrant professional attention earliest. The specificity of what you have written in your notes for this signal is your most valuable asset. Continue to Section 3 and consider whether a GP conversation is the right next step.';}
+  else if(y>=2||(y>=1&&s>=1)){txt='<strong>You have observed real cognitive or behavioural changes.</strong> Even if nothing is happening every day, two or more observations in this section represent a meaningful pattern worth continuing to document and worth raising with a GP at your next opportunity. Continue to Section 3.';}
+  else if(y===1||s>=1){txt='A cognitive or behavioural change has been noticed. Write it as specifically as you can and continue to Section 3. Even a single observation in this domain is worth bringing to a professional\'s attention if it persists.';}
+  else if(n===marked){txt='Nothing in the cognitive or behavioural domain has stood out yet. Continue to Section 3 to complete the module picture.';}
+  else{txt='Keep working through the signals. Your picture will form as you go.';}
+  document.getElementById('interpretation-text').innerHTML=txt;
+}
+function printGuide(){
+  var w=window.open('','_blank');
+  if(w){w.document.open();w.document.write(document.documentElement.outerHTML);w.document.close();w.focus();setTimeout(function(){w.print();},600);}
+  else{window.print();}
+}
+function resetAll(){
+  if(!confirm('Clear all your responses for this section and start again?'))return;
+  freqs={};
+  for(var i=1;i<=total;i++){
+    var card=document.getElementById('card-'+i);
+    card.classList.remove('is-regular','is-yes','is-sometimes','is-no','is-marked','is-open');
+    document.getElementById('status-'+i).textContent='Not reviewed';
+    card.querySelectorAll('.freq-btn').forEach(function(b){b.classList.remove('sel-regular','sel-yes','sel-sometimes','sel-no');});
+    card.querySelectorAll('.notes-field').forEach(function(t){t.value='';});
+  }
+  ['count-regular','count-yes','count-sometimes','count-no'].forEach(function(id){document.getElementById(id).textContent='0';});
+  document.getElementById('prog-fill').style.width='0%';
+  document.getElementById('prog-pct').textContent='0%';
+  document.getElementById('prog-text').textContent='0 of 3 signals reviewed';
+  document.getElementById('regular-panel').style.display='none';
+  document.getElementById('regular-list').innerHTML='';
+  document.getElementById('interpretation-text').innerHTML='Review the signals above and your results will appear here.';
+}
+</script>
+</body>
+</html>

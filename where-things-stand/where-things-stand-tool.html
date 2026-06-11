@@ -498,551 +498,20 @@ body {
   <!-- EMAIL GATE -->
   <div class="email-gate hidden" id="email-gate">
     <h2>Almost there</h2>
-    <p>Enter your email to see your personalized result. We'll also send you "The Quiet Shift" -- a free guide -- and add you to our weekly list with new articles for people navigating this with their parents.</p>
-    <form class="email-form" id="email-form" onsubmit="return handleEmailSubmit(event)">
-      <input type="text" class="email-input" id="name-input" placeholder="First name" required>
-      <input type="email" class="email-input" id="email-input" placeholder="you@email.com" required>
-      <button type="submit" class="email-submit">See my results</button>
-    </form>
-    <p class="email-error" id="email-error">Please enter your first name and a valid email address.</p>
-    <p class="email-fineprint">No spam. Unsubscribe any time. Your result is yours either way.</p>
-  </div>
-
-  <!--
-    Systeme.io embed -- provided 2026-06-11.
-    This script injects a visible iframe pointing to a Systeme.io-hosted page
-    (its own layout/styling, not this page's brand styles), and only handles
-    resizing the iframe -- it does not appear to send a "form submitted" message
-    back to this page that we could hook into.
-
-    Not wired into the flow above yet. See the chat reply for the question on
-    how this should connect to the custom name/email form above without
-    showing a second, differently-styled form to the visitor.
-  -->
-  <div id="systeme-embed-container" class="hidden">
-    <script id="form-script-tag-24366837" src="https://www.genovean.com/public/remote/page/416992647ba60456efd6f9aae339278a4e14e5e0.js"></script>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Where Things Stand -- Genovean</title>
-<style>
-/* ── Genovean brand tokens ── */
-:root {
-  --g-dark:    #1A3A2A;
-  --g-mid:     #1D9E75;
-  --g-light:   #E1F5EE;
-  --g-sand:    #F5F0E8;
-  --g-warm:    #C8B89A;
-  --g-text:    #1C1C1A;
-  --g-muted:   #5A5A56;
-  --g-subtle:  #8A8A84;
-  --g-border:  #D8D4C8;
-  --g-white:   #FFFFFF;
-  --g-amber:   #FAEEDA;
-  --g-amber-t: #633806;
-  --g-amber-b: #BA7517;
-  --radius-sm: 6px;
-  --radius-md: 10px;
-  --radius-lg: 14px;
-}
-
-/* ── Reset ── */
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-body {
-  font-family: Georgia, 'Times New Roman', serif;
-  background: var(--g-sand);
-  color: var(--g-text);
-  line-height: 1.65;
-  font-size: 15px;
-}
-
-/* ── Layout ── */
-.page-wrap {
-  max-width: 780px;
-  margin: 0 auto;
-  padding: 0 0 60px;
-}
-
-/* ── Header ── */
-.header-bar {
-  background: var(--g-dark);
-  color: #fff;
-  padding: 28px 36px 24px;
-}
-.header-top {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  flex-wrap: wrap;
-  gap: 12px;
-  margin-bottom: 18px;
-}
-.brand-name {
-  font-family: Georgia, serif;
-  font-size: 13px;
-  font-weight: normal;
-  letter-spacing: .12em;
-  text-transform: uppercase;
-  color: var(--g-warm);
-}
-.phase-tag {
-  font-size: 11px;
-  font-weight: bold;
-  letter-spacing: .1em;
-  text-transform: uppercase;
-  background: rgba(255,255,255,.12);
-  color: var(--g-warm);
-  padding: 4px 12px;
-  border-radius: 20px;
-}
-.tool-title {
-  font-family: Georgia, serif;
-  font-size: 32px;
-  font-weight: normal;
-  color: #fff;
-  letter-spacing: -.02em;
-  margin-bottom: 8px;
-  line-height: 1.15;
-}
-.tool-subtitle {
-  font-size: 14px;
-  color: rgba(255,255,255,.65);
-  max-width: 520px;
-  line-height: 1.55;
-}
-.how-to-banner {
-  background: rgba(255,255,255,.08);
-  border-left: 3px solid var(--g-mid);
-  padding: 12px 16px;
-  margin-top: 18px;
-  font-size: 13px;
-  color: rgba(255,255,255,.75);
-  line-height: 1.55;
-  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
-}
-.how-to-banner strong { color: #fff; }
-
-/* ── Start screen ── */
-.start-screen {
-  background: var(--g-white);
-  border: 1px solid var(--g-border);
-  border-radius: var(--radius-lg);
-  padding: 40px 28px;
-  text-align: center;
-}
-.start-screen h2 {
-  font-family: Georgia, serif;
-  font-size: 24px;
-  font-weight: normal;
-  margin-bottom: 12px;
-  color: var(--g-text);
-}
-.start-screen p {
-  font-size: 14.5px;
-  color: var(--g-muted);
-  max-width: 480px;
-  margin: 0 auto 26px;
-  line-height: 1.65;
-}
-.begin-btn {
-  display: inline-block;
-  padding: 14px 40px;
-  font-size: 15px;
-  font-family: Georgia, serif;
-  font-weight: bold;
-  border: none;
-  border-radius: var(--radius-sm);
-  background: var(--g-mid);
-  color: #fff;
-  cursor: pointer;
-  transition: opacity .15s;
-}
-.begin-btn:hover { opacity: .9; }
-.start-fineprint {
-  font-size: 11.5px;
-  color: var(--g-subtle);
-  margin-top: 16px;
-}
-
-/* ── Progress bar ── */
-.progress-wrap {
-  background: var(--g-white);
-  border-bottom: 1px solid var(--g-border);
-  padding: 12px 36px;
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  font-size: 12px;
-  color: var(--g-subtle);
-  position: sticky;
-  top: 0;
-  z-index: 10;
-}
-.progress-track {
-  flex: 1;
-  height: 5px;
-  background: var(--g-border);
-  border-radius: 3px;
-  overflow: hidden;
-}
-.progress-fill {
-  height: 100%;
-  background: var(--g-mid);
-  border-radius: 3px;
-  width: 0%;
-  transition: width .3s ease;
-}
-.progress-label { white-space: nowrap; font-size: 12px; color: var(--g-subtle); min-width: 110px; text-align: right; }
-
-/* ── Body content ── */
-.content-area { padding: 28px 36px 0; }
-
-/* ── Quiz card ── */
-.quiz-card {
-  background: var(--g-white);
-  border: 1px solid var(--g-border);
-  border-radius: var(--radius-lg);
-  padding: 28px;
-}
-.quiz-eyebrow {
-  font-size: 11px;
-  font-weight: bold;
-  letter-spacing: .1em;
-  text-transform: uppercase;
-  color: var(--g-subtle);
-  margin-bottom: 10px;
-}
-.quiz-question {
-  font-family: Georgia, serif;
-  font-size: 21px;
-  font-weight: normal;
-  line-height: 1.4;
-  color: var(--g-text);
-  margin-bottom: 22px;
-}
-
-.option-list { display: flex; flex-direction: column; gap: 10px; }
-.option-btn {
-  display: block;
-  width: 100%;
-  text-align: left;
-  padding: 14px 16px;
-  font-size: 14.5px;
-  font-family: Georgia, serif;
-  line-height: 1.5;
-  color: var(--g-text);
-  background: var(--g-white);
-  border: 1px solid var(--g-border);
-  border-radius: var(--radius-md);
-  cursor: pointer;
-  transition: border-color .12s, background .12s;
-}
-.option-btn:hover { background: var(--g-sand); border-color: var(--g-warm); }
-.option-btn.selected {
-  background: var(--g-light);
-  border-color: var(--g-mid);
-  font-weight: bold;
-}
-
-/* ── Nav row ── */
-.nav-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 26px;
-  padding-top: 20px;
-  border-top: 1px solid var(--g-border);
-}
-.nav-btn {
-  padding: 10px 22px;
-  font-size: 13px;
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-  font-family: Georgia, serif;
-  border: 1px solid var(--g-border);
-  background: var(--g-white);
-  color: var(--g-muted);
-  transition: opacity .15s, background .12s;
-}
-.nav-btn:hover { background: var(--g-sand); }
-.nav-btn.primary {
-  background: var(--g-dark);
-  color: #fff;
-  border-color: var(--g-dark);
-}
-.nav-btn.primary:hover { background: #0F2A1C; }
-.nav-btn:disabled { opacity: .35; cursor: not-allowed; }
-.nav-btn.invisible { visibility: hidden; }
-
-/* ── Email gate ── */
-.email-gate {
-  background: var(--g-white);
-  border: 1px solid var(--g-border);
-  border-radius: var(--radius-lg);
-  padding: 32px;
-  text-align: center;
-}
-.email-gate h2 {
-  font-family: Georgia, serif;
-  font-size: 24px;
-  font-weight: normal;
-  margin-bottom: 10px;
-  color: var(--g-text);
-}
-.email-gate p {
-  font-size: 14px;
-  color: var(--g-muted);
-  max-width: 460px;
-  margin: 0 auto 22px;
-  line-height: 1.65;
-}
-.email-form {
-  display: flex;
-  gap: 10px;
-  max-width: 420px;
-  margin: 0 auto;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-.email-input {
-  flex: 1;
-  min-width: 220px;
-  padding: 12px 14px;
-  font-size: 14px;
-  font-family: Georgia, serif;
-  border: 1px solid var(--g-border);
-  border-radius: var(--radius-sm);
-  color: var(--g-text);
-  background: var(--g-sand);
-}
-.email-input:focus { outline: none; border-color: var(--g-mid); background: var(--g-white); }
-.email-submit {
-  padding: 12px 24px;
-  font-size: 14px;
-  font-family: Georgia, serif;
-  font-weight: bold;
-  border: none;
-  border-radius: var(--radius-sm);
-  background: var(--g-mid);
-  color: #fff;
-  cursor: pointer;
-  transition: opacity .15s;
-}
-.email-submit:hover { opacity: .9; }
-.email-error {
-  display: none;
-  font-size: 12.5px;
-  color: #791F1F;
-  margin-top: 10px;
-}
-.email-fineprint {
-  font-size: 11.5px;
-  color: var(--g-subtle);
-  margin-top: 16px;
-  max-width: 420px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-/* ── Result panel ── */
-.result-panel {
-  background: var(--g-dark);
-  border-radius: var(--radius-lg);
-  padding: 30px 32px;
-  color: #fff;
-}
-.result-eyebrow {
-  font-size: 11px;
-  font-weight: bold;
-  letter-spacing: .1em;
-  text-transform: uppercase;
-  color: var(--g-warm);
-  margin-bottom: 10px;
-}
-.result-title {
-  font-family: Georgia, serif;
-  font-size: 24px;
-  font-weight: normal;
-  line-height: 1.3;
-  color: #fff;
-  margin-bottom: 16px;
-  letter-spacing: -.01em;
-}
-.result-body p {
-  font-size: 14.5px;
-  color: rgba(255,255,255,.82);
-  line-height: 1.7;
-  margin-bottom: 14px;
-}
-.result-body p:last-child { margin-bottom: 0; }
-
-.course-cta {
-  background: rgba(255,255,255,.07);
-  border-left: 3px solid var(--g-mid);
-  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
-  padding: 18px 20px;
-  margin-top: 22px;
-}
-.course-cta-eyebrow {
-  font-size: 10.5px;
-  font-weight: bold;
-  letter-spacing: .1em;
-  text-transform: uppercase;
-  color: rgba(255,255,255,.45);
-  margin-bottom: 8px;
-}
-.course-cta h3 {
-  font-family: Georgia, serif;
-  font-size: 18px;
-  font-weight: normal;
-  color: #fff;
-  margin-bottom: 8px;
-}
-.course-cta p {
-  font-size: 13.5px;
-  color: rgba(255,255,255,.75);
-  line-height: 1.6;
-  margin-bottom: 14px;
-}
-.next-btn {
-  display: inline-block;
-  padding: 11px 22px;
-  font-size: 13.5px;
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-  font-family: Georgia, serif;
-  border: none;
-  text-decoration: none;
-  transition: opacity .15s;
-}
-.next-btn.primary { background: var(--g-mid); color: #fff; }
-.next-btn:hover { opacity: .88; }
-
-.bonus-note {
-  margin-top: 18px;
-  padding-top: 16px;
-  border-top: 1px solid rgba(255,255,255,.12);
-  font-size: 12.5px;
-  color: rgba(255,255,255,.55);
-  line-height: 1.6;
-}
-
-/* ── Action bar ── */
-.action-bar {
-  display: flex;
-  justify-content: center;
-  margin-top: 18px;
-}
-.action-btn {
-  padding: 9px 18px;
-  font-size: 12.5px;
-  border: 1px solid var(--g-border);
-  border-radius: var(--radius-sm);
-  background: var(--g-white);
-  color: var(--g-muted);
-  cursor: pointer;
-  font-family: Georgia, serif;
-  transition: background .12s, border-color .12s;
-}
-.action-btn:hover { background: var(--g-sand); border-color: var(--g-warm); }
-
-/* ── Footer ── */
-.footer {
-  text-align: center;
-  padding: 28px 36px 0;
-  font-size: 12px;
-  color: var(--g-subtle);
-  font-family: Georgia, serif;
-  margin-top: 32px;
-}
-.footer strong { color: var(--g-muted); }
-
-.hidden { display: none !important; }
-
-/* ── Responsive ── */
-@media (max-width: 540px) {
-  .header-bar, .content-area { padding-left: 20px; padding-right: 20px; }
-  .progress-wrap { padding-left: 20px; padding-right: 20px; }
-  .tool-title { font-size: 26px; }
-  .quiz-question { font-size: 18px; }
-  .quiz-card, .email-gate, .result-panel { padding: 22px; }
-  .nav-row { flex-direction: row; }
-  .progress-label { min-width: 70px; }
-}
-</style>
-</head>
-<body>
-<div class="page-wrap">
-
-<!-- HEADER -->
-<div class="header-bar">
-  <div class="header-top">
-    <span class="brand-name">Genovean</span>
-    <span class="phase-tag">Free diagnostic</span>
-  </div>
-  <h1 class="tool-title">Where Things Stand</h1>
-  <p class="tool-subtitle">Eight quick questions about what's actually going on with your parent right now. Answer based on what's true today, not what you wish were true or think the answer should be. At the end, you'll get a clear read on where things stand and what to do next.</p>
-  <div class="how-to-banner">
-    <strong>How this works.</strong> Go with your first reaction. There's no score to pass and no answer that's "wrong" -- this is about getting an honest picture, not a test. When you've answered all eight, enter your email to see your result.
-  </div>
-</div>
-
-<!-- STICKY PROGRESS -->
-<div class="progress-wrap hidden" id="progress-wrap">
-  <span id="prog-text" style="white-space:nowrap;">Question 1 of 8</span>
-  <div class="progress-track"><div class="progress-fill" id="prog-fill"></div></div>
-  <span class="progress-label" id="prog-pct">12%</span>
-</div>
-
-<!-- CONTENT -->
-<div class="content-area">
-
-  <!-- START SCREEN -->
-  <div class="start-screen" id="start-screen">
-    <h2>Ready when you are.</h2>
-    <p>Eight questions about what's actually going on with your parent right now. A few minutes, and you'll have a clearer picture of where things stand and what to do next.</p>
-    <button type="button" class="begin-btn" onclick="showQuiz()">Begin</button>
-    <p class="start-fineprint">Takes about 3 minutes. Your answers are private.</p>
-  </div>
-
-  <!-- QUIZ CARD -->
-  <div class="quiz-card hidden" id="quiz-card">
-    <p class="quiz-eyebrow" id="quiz-eyebrow">Question 1 of 8</p>
-    <p class="quiz-question" id="quiz-question"></p>
-    <div class="option-list" id="option-list"></div>
-    <div class="nav-row">
-      <button class="nav-btn" id="back-btn" onclick="prevQuestion()">Back</button>
-      <button class="nav-btn primary" id="next-btn" onclick="nextQuestion()" disabled>Next</button>
+    <p>Enter your name and email to see your personalized result. We'll also send you "The Quiet Shift" -- a free guide -- and add you to our weekly list with new articles for people navigating this with their parents.</p>
+    <!--
+      Systeme.io opt-in embed. This is the actual capture form (no API
+      available, so this iframe embed is the submission mechanism).
+      In Systeme, this form's "redirect after submission" should point to
+      the thank-you page (https://www.genovean.com/where-things-stand-thank-you),
+      and that thank-you page should immediately forward the visitor to
+      https://www.genovean.com/where-things-stand?done=1 so this page can
+      pick back up and show the result.
+    -->
+    <div id="systeme-embed-container">
+      <script id="form-script-tag-24366837" src="https://www.genovean.com/public/remote/page/416992647ba60456efd6f9aae339278a4e14e5e0.js"></script>
     </div>
-  </div>
-
-  <!-- EMAIL GATE -->
-  <div class="email-gate hidden" id="email-gate">
-    <h2>Almost there</h2>
-    <p>Enter your email to see your personalized result. We'll also send you "The Quiet Shift" -- a free guide -- and add you to our weekly list with new articles for people navigating this with their parents.</p>
-    <form class="email-form" id="email-form" onsubmit="return handleEmailSubmit(event)">
-      <input type="text" class="email-input" id="name-input" placeholder="First name" required>
-      <input type="email" class="email-input" id="email-input" placeholder="you@email.com" required>
-      <button type="submit" class="email-submit">See my results</button>
-    </form>
-    <p class="email-error" id="email-error">Please enter your first name and a valid email address.</p>
     <p class="email-fineprint">No spam. Unsubscribe any time. Your result is yours either way.</p>
-  </div>
-
-  <!--
-    Systeme.io embed -- provided 2026-06-11.
-    This script injects a visible iframe pointing to a Systeme.io-hosted page
-    (its own layout/styling, not this page's brand styles), and only handles
-    resizing the iframe -- it does not appear to send a "form submitted" message
-    back to this page that we could hook into.
-
-    Not wired into the flow above yet. See the chat reply for the question on
-    how this should connect to the custom name/email form above without
-    showing a second, differently-styled form to the visitor.
-  -->
-  <div id="systeme-embed-container" class="hidden">
-    <script id="form-script-tag-24366837" src="https://www.genovean.com/public/remote/page/416992647ba60456efd6f9aae339278a4e14e5e0.js"></script>
   </div>
 
   <!-- RESULT PANEL -->
@@ -1267,8 +736,12 @@ function nextQuestion() {
     document.getElementById('prog-pct').textContent = '100%';
     document.getElementById('prog-text').textContent = 'Question ' + questions.length + ' of ' + questions.length;
     document.getElementById('quiz-card').classList.add('hidden');
+
+    /* Save the result now, before the visitor leaves for the Systeme.io
+       opt-in step, so it can be shown when they're sent back here. */
+    try { localStorage.setItem('wts_result', computeResult()); } catch (e) {}
+
     document.getElementById('email-gate').classList.remove('hidden');
-    document.getElementById('email-input').focus();
   }
 }
 
@@ -1277,26 +750,6 @@ function prevQuestion() {
     current--;
     renderQuestion();
   }
-}
-
-function handleEmailSubmit(e) {
-  e.preventDefault();
-  var input = document.getElementById('email-input');
-  var error = document.getElementById('email-error');
-  var value = input.value.trim();
-  var valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
-  if (!valid) {
-    error.style.display = 'block';
-    return false;
-  }
-  error.style.display = 'none';
-
-  /* TODO: this is also the point to trigger the Systeme.io automation
-     (deliver "The Quiet Shift", add to the weekly list) once that
-     form/embed is wired in. The result reveal below does not depend on it. */
-
-  showResult();
-  return false;
 }
 
 function computeResult() {
@@ -1318,8 +771,7 @@ function computeResult() {
   return best;
 }
 
-function showResult() {
-  var key = computeResult();
+function renderResult(key) {
   var v = variants[key];
 
   document.getElementById('result-title').textContent = v.title;
@@ -1331,345 +783,52 @@ function showResult() {
     p.textContent = para;
     bodyEl.appendChild(p);
   });
-  var coursePara = document.createElement('p');
-  coursePara.textContent = v.courseNote;
   document.querySelector('.course-cta p').textContent = v.courseNote;
+}
 
+/* Called on page load. If the visitor has just come back from the
+   Systeme.io opt-in step (?done=1) and we have a saved result, show it
+   directly instead of starting the quiz over. Returns true if it did so. */
+function checkReturnFromOptIn() {
+  var params = new URLSearchParams(window.location.search);
+  if (params.get('done') !== '1') return false;
+
+  var key = null;
+  try { key = localStorage.getItem('wts_result'); } catch (e) {}
+  if (!key || !variants[key]) return false;
+
+  document.getElementById('start-screen').classList.add('hidden');
+  document.getElementById('progress-wrap').classList.add('hidden');
+  document.getElementById('quiz-card').classList.add('hidden');
   document.getElementById('email-gate').classList.add('hidden');
+
+  renderResult(key);
   document.getElementById('result-panel').classList.remove('hidden');
   document.getElementById('action-bar').classList.remove('hidden');
+
+  try { localStorage.removeItem('wts_result'); } catch (e) {}
+  if (window.history && window.history.replaceState) {
+    window.history.replaceState({}, document.title, window.location.pathname);
+  }
+  return true;
 }
 
 function resetAll() {
   current = 0;
   answers = new Array(questions.length).fill(null);
+  try { localStorage.removeItem('wts_result'); } catch (e) {}
   document.getElementById('result-panel').classList.add('hidden');
   document.getElementById('action-bar').classList.add('hidden');
   document.getElementById('email-gate').classList.add('hidden');
-  document.getElementById('email-input').value = '';
-  document.getElementById('email-error').style.display = 'none';
   document.getElementById('start-screen').classList.add('hidden');
   document.getElementById('progress-wrap').classList.remove('hidden');
   document.getElementById('quiz-card').classList.remove('hidden');
   renderQuestion();
 }
 
-renderQuestion();
-</script>
-</body>
-</html>
-  </div>
-
-  <!-- RESULT PANEL -->
-  <div class="result-panel hidden" id="result-panel">
-    <p class="result-eyebrow" id="result-eyebrow">Where things stand</p>
-    <h2 class="result-title" id="result-title"></h2>
-    <div class="result-body" id="result-body"></div>
-    <div class="course-cta">
-      <p class="course-cta-eyebrow">Your starting point</p>
-      <h3>Course 1: Seeing It Clearly</h3>
-      <p>The Phase 1 Awareness Toolkit. A guided way to turn what you've been noticing into a clear, written picture you can build on, whatever comes next.</p>
-      <!-- TODO: replace "#" with the Course 1 checkout / sales page URL -->
-      <a href="#" class="next-btn primary">Start Course 1</a>
-    </div>
-    <div class="bonus-note">Check your email for "The Quiet Shift" -- it's on its way to the address you entered.</div>
-  </div>
-
-  <div class="action-bar hidden" id="action-bar">
-    <button class="action-btn" onclick="resetAll()">Start over</button>
-  </div>
-
-</div><!-- /content-area -->
-
-<!-- FOOTER -->
-<div class="footer">
-  <p><strong>Genovean</strong> &mdash; The Quiet Shift</p>
-  <p style="margin-top:6px">This tool is for reflection purposes only. It is not a medical, legal, or financial assessment.</p>
-  <p style="margin-top:4px">genovean.com &nbsp;&middot;&nbsp; &copy; Genovean 2026</p>
-</div>
-
-</div><!-- /page-wrap -->
-
-<script>
-/* ── Question data ──
-   phase values: awareness | family | operations | money
-   each option score: 0 (low) to 3 (high urgency / unresolved) */
-var questions = [
-  {
-    phase: 'awareness',
-    text: 'When you visit your parent now, what do you see compared to a year ago?',
-    options: [
-      { text: "Nothing really feels different.", score: 0 },
-      { text: "A few small things catch my attention, but I tell myself it's nothing.", score: 1 },
-      { text: "I notice things, but I can't tell if it's normal aging or something more.", score: 2 },
-      { text: "I leave visits with a feeling I can't quite shake, like something is off.", score: 3 }
-    ]
-  },
-  {
-    phase: 'awareness',
-    text: 'When something seems different, what usually happens next?',
-    options: [
-      { text: "I bring it up and we talk it through.", score: 0 },
-      { text: "I notice it, then get busy and forget to follow up.", score: 1 },
-      { text: "I make a mental note, but never write it down or say anything.", score: 2 },
-      { text: "I notice it, then talk myself out of it and decide I'm probably overreacting.", score: 3 }
-    ]
-  },
-  {
-    phase: 'family',
-    text: "When you've tried to talk to your parent about changes you're noticing, what happens?",
-    options: [
-      { text: "We haven't needed that conversation yet.", score: 0 },
-      { text: "It went fine -- they're open to it.", score: 1 },
-      { text: "They brushed it off or changed the subject.", score: 2 },
-      { text: "It turned into tension or an argument.", score: 3 }
-    ]
-  },
-  {
-    phase: 'family',
-    text: 'When you talk with your siblings or other family members about your parent, do you all see things the same way?',
-    options: [
-      { text: "It's just me, or we're already on the same page.", score: 0 },
-      { text: "We mostly agree, but no one's taken the lead.", score: 1 },
-      { text: "I feel like I'm the only one who's noticed or who's worried.", score: 2 },
-      { text: "We see it differently, and it's starting to cause friction.", score: 3 }
-    ]
-  },
-  {
-    phase: 'operations',
-    text: "How much of your parent's day-to-day -- appointments, medications, errands -- are you currently handling?",
-    options: [
-      { text: "None of that yet -- they manage it themselves.", score: 0 },
-      { text: "I help out occasionally, when asked.", score: 1 },
-      { text: "I'm regularly involved, and it's becoming a bigger part of my routine.", score: 2 },
-      { text: "I'm the one holding it together, and most weeks it feels like too much.", score: 3 }
-    ]
-  },
-  {
-    phase: 'operations',
-    text: "When something needs to get done for your parent, who ends up handling it?",
-    options: [
-      { text: "They do, or it hasn't come up.", score: 0 },
-      { text: "It gets shared around depending on who's free.", score: 1 },
-      { text: "It usually lands on me by default.", score: 2 },
-      { text: "It lands on me, and I worry about what happens if I can't keep up.", score: 3 }
-    ]
-  },
-  {
-    phase: 'money',
-    text: "If you needed to step in on your parent's finances or a medical decision tomorrow, could you?",
-    options: [
-      { text: "Yes -- everything's in place and I know where things are.", score: 0 },
-      { text: "Mostly, though I'd need to track a few things down.", score: 1 },
-      { text: "I'm not sure -- we haven't really talked about it.", score: 2 },
-      { text: "No, and honestly thinking about it makes me anxious.", score: 3 }
-    ]
-  },
-  {
-    phase: 'money',
-    text: "Have you and your parent talked about who would make decisions for them if they couldn't?",
-    options: [
-      { text: "Yes -- it's documented and everyone knows the plan.", score: 0 },
-      { text: "We've talked about it, but nothing's official.", score: 1 },
-      { text: "It's come up, but we haven't gotten anywhere.", score: 2 },
-      { text: "No -- it feels too soon or too hard to bring up.", score: 3 }
-    ]
-  }
-];
-
-/* ── Result variants ──
-   "early" applies when the total score across all 8 questions is low (<=4),
-   meaning nothing has crossed into clear concern in any single area yet.
-   Otherwise, the phase with the highest combined score (2 questions, max 6)
-   drives the result. Ties are broken in this order: awareness, family,
-   operations, money. */
-var variants = {
-  early: {
-    title: "Right now, nothing is forcing your hand.",
-    body: [
-      "Based on your answers, things with your parent are largely steady right now. That's worth naming clearly, because it's also the easiest moment to get a head start, before something happens that puts you in reactive mode.",
-      "Most families don't start paying close attention until something forces them to: a fall, a hospital visit, a phone call from a neighbor. You're not there. This is the stage where a small amount of structure now saves a lot of scrambling later."
-    ],
-    courseNote: "It's built for exactly this moment, before anything is urgent, while you can still build a clear, calm picture of what's normal for your parent today. That picture becomes the baseline you'll compare everything else against."
-  },
-  awareness: {
-    title: "You've noticed things. You just haven't let yourself say so.",
-    body: [
-      "Your answers point to something specific: you're seeing changes, and you're also the one talking yourself out of them. That combination, noticing and then dismissing, is one of the most common patterns at this stage, and one of the easiest to stay stuck in for years.",
-      "The things you've noticed don't disappear because you decide not to look at them again. They just stop getting written down anywhere, which means six months from now you won't have anything to compare against except your memory."
-    ],
-    courseNote: "It gives you a structured way to take what you've been noticing and turn it into something concrete, without needing to decide yet what any of it means or what to do about it. That's the part most people skip, and it's the part that makes everything after it easier."
-  },
-  family: {
-    title: "You're seeing something your family isn't seeing yet, or won't say out loud.",
-    body: [
-      "Your answers suggest the issue isn't whether something is happening with your parent -- it's that you and the people around you don't agree on it, or you're the only one who's brought it up. Either your parent brushed off a conversation, or your siblings haven't connected the same dots you have, and right now the weight of noticing is landing on you alone.",
-      "Before that conversation can go anywhere, you need something more solid than a feeling."
-    ],
-    courseNote: "It helps you build a clear, specific record of what you've actually observed, so when you do bring it to your family, you're not arguing about a feeling -- you're pointing at something real."
-  },
-  operations: {
-    title: "You're already carrying more than you've said out loud.",
-    body: [
-      "Your answers describe someone who's already involved in the daily details -- appointments, errands, the things that need to get done -- and who's noticed it quietly becoming a bigger part of their life. When something needs handling, it tends to land on you, by default rather than by plan.",
-      "That can work for a while. The problem is that \"by default\" has no structure to it, so when more gets added, and it usually does, there's nothing to fall back on except doing more yourself."
-    ],
-    courseNote: "Before adding systems for managing the day-to-day, it helps to have a clear picture of what's actually changed and what's likely coming next, so the structure you build is built for what's really happening, not just what's in front of you this week."
-  },
-  money: {
-    title: "The biggest unknowns are the ones nobody's written down.",
-    body: [
-      "Your answers point to gaps in the practical and legal groundwork: who can step in, where things are, what's been decided versus what's just been talked about, or not talked about at all. This is the area people put off longest, often because it means having a conversation that feels too soon or too uncomfortable to start.",
-      "It also tends to be the area where \"soon\" turns into \"too late\" the fastest, not because anyone meant to wait, but because there was never a clear moment to start."
-    ],
-    courseNote: "It won't get the legal documents signed, but it builds the observational record that makes those harder conversations easier to have, grounded in what's actually happening rather than hypotheticals."
-  }
-};
-
-var current = 0;
-var answers = new Array(questions.length).fill(null);
-
-function showQuiz() {
-  document.getElementById('start-screen').classList.add('hidden');
-  document.getElementById('progress-wrap').classList.remove('hidden');
-  document.getElementById('quiz-card').classList.remove('hidden');
+if (!checkReturnFromOptIn()) {
   renderQuestion();
 }
-
-function renderQuestion() {
-  var q = questions[current];
-  document.getElementById('quiz-eyebrow').textContent = 'Question ' + (current + 1) + ' of ' + questions.length;
-  document.getElementById('quiz-question').textContent = q.text;
-
-  var list = document.getElementById('option-list');
-  list.innerHTML = '';
-  q.options.forEach(function (opt, i) {
-    var btn = document.createElement('button');
-    btn.type = 'button';
-    btn.className = 'option-btn' + (answers[current] === i ? ' selected' : '');
-    btn.textContent = opt.text;
-    btn.onclick = function () { selectOption(i); };
-    list.appendChild(btn);
-  });
-
-  document.getElementById('back-btn').classList.toggle('invisible', current === 0);
-  var nextBtn = document.getElementById('next-btn');
-  nextBtn.disabled = (answers[current] === null);
-  nextBtn.textContent = (current === questions.length - 1) ? 'See my results' : 'Next';
-
-  updateProgress();
-}
-
-function selectOption(i) {
-  answers[current] = i;
-  renderQuestion();
-}
-
-function updateProgress() {
-  var pct = Math.round(((current) / questions.length) * 100);
-  document.getElementById('prog-fill').style.width = pct + '%';
-  document.getElementById('prog-pct').textContent = pct + '%';
-  document.getElementById('prog-text').textContent = 'Question ' + (current + 1) + ' of ' + questions.length;
-}
-
-function nextQuestion() {
-  if (answers[current] === null) return;
-  if (current < questions.length - 1) {
-    current++;
-    renderQuestion();
-  } else {
-    document.getElementById('prog-fill').style.width = '100%';
-    document.getElementById('prog-pct').textContent = '100%';
-    document.getElementById('prog-text').textContent = 'Question ' + questions.length + ' of ' + questions.length;
-    document.getElementById('quiz-card').classList.add('hidden');
-    document.getElementById('email-gate').classList.remove('hidden');
-    document.getElementById('email-input').focus();
-  }
-}
-
-function prevQuestion() {
-  if (current > 0) {
-    current--;
-    renderQuestion();
-  }
-}
-
-function handleEmailSubmit(e) {
-  e.preventDefault();
-  var input = document.getElementById('email-input');
-  var error = document.getElementById('email-error');
-  var value = input.value.trim();
-  var valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
-  if (!valid) {
-    error.style.display = 'block';
-    return false;
-  }
-  error.style.display = 'none';
-
-  /* TODO: this is also the point to trigger the Systeme.io automation
-     (deliver "The Quiet Shift", add to the weekly list) once that
-     form/embed is wired in. The result reveal below does not depend on it. */
-
-  showResult();
-  return false;
-}
-
-function computeResult() {
-  var totals = { awareness: 0, family: 0, operations: 0, money: 0 };
-  var grandTotal = 0;
-  questions.forEach(function (q, i) {
-    var score = q.options[answers[i]].score;
-    totals[q.phase] += score;
-    grandTotal += score;
-  });
-
-  if (grandTotal <= 4) return 'early';
-
-  var order = ['awareness', 'family', 'operations', 'money'];
-  var best = order[0];
-  order.forEach(function (phase) {
-    if (totals[phase] > totals[best]) best = phase;
-  });
-  return best;
-}
-
-function showResult() {
-  var key = computeResult();
-  var v = variants[key];
-
-  document.getElementById('result-title').textContent = v.title;
-
-  var bodyEl = document.getElementById('result-body');
-  bodyEl.innerHTML = '';
-  v.body.forEach(function (para) {
-    var p = document.createElement('p');
-    p.textContent = para;
-    bodyEl.appendChild(p);
-  });
-  var coursePara = document.createElement('p');
-  coursePara.textContent = v.courseNote;
-  document.querySelector('.course-cta p').textContent = v.courseNote;
-
-  document.getElementById('email-gate').classList.add('hidden');
-  document.getElementById('result-panel').classList.remove('hidden');
-  document.getElementById('action-bar').classList.remove('hidden');
-}
-
-function resetAll() {
-  current = 0;
-  answers = new Array(questions.length).fill(null);
-  document.getElementById('result-panel').classList.add('hidden');
-  document.getElementById('action-bar').classList.add('hidden');
-  document.getElementById('email-gate').classList.add('hidden');
-  document.getElementById('email-input').value = '';
-  document.getElementById('email-error').style.display = 'none';
-  document.getElementById('start-screen').classList.add('hidden');
-  document.getElementById('progress-wrap').classList.remove('hidden');
-  document.getElementById('quiz-card').classList.remove('hidden');
-  renderQuestion();
-}
-
-renderQuestion();
 </script>
 </body>
 </html>

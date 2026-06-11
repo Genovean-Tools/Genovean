@@ -508,9 +508,7 @@ body {
       https://www.genovean.com/where-things-stand?done=1 so this page can
       pick back up and show the result.
     -->
-    <div id="systeme-embed-container">
-      <script id="form-script-tag-24366837" src="https://www.genovean.com/public/remote/page/416992647ba60456efd6f9aae339278a4e14e5e0.js"></script>
-    </div>
+    <div id="systeme-embed-container"></div>
     <p class="email-fineprint">No spam. Unsubscribe any time. Your result is yours either way.</p>
   </div>
 
@@ -742,7 +740,24 @@ function nextQuestion() {
     try { localStorage.setItem('wts_result', computeResult()); } catch (e) {}
 
     document.getElementById('email-gate').classList.remove('hidden');
+    loadSystemeEmbed();
   }
+}
+
+var systemeEmbedLoaded = false;
+
+/* The Systeme.io embed script measures and sizes its iframe when it runs.
+   If it ran while #email-gate was still hidden (display:none), that
+   measurement comes back as 0 and the form never becomes visible. So we
+   load the script only once the email-gate is actually on screen. */
+function loadSystemeEmbed() {
+  if (systemeEmbedLoaded) return;
+  systemeEmbedLoaded = true;
+  var s = document.createElement('script');
+  s.id = 'form-script-tag-24366837';
+  s.src = 'https://www.genovean.com/public/remote/page/416992647ba60456efd6f9aae339278a4e14e5e0.js';
+  s.async = false;
+  document.getElementById('systeme-embed-container').appendChild(s);
 }
 
 function prevQuestion() {

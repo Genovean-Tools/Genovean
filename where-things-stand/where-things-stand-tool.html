@@ -499,16 +499,11 @@ body {
   <div class="email-gate hidden" id="email-gate">
     <h2>Almost there</h2>
     <p>Enter your name and email to see your personalized result. We'll also send you "The Quiet Shift" -- a free guide -- and add you to our weekly list with new articles for people navigating this with their parents.</p>
-    <!--
-      Systeme.io opt-in embed. This is the actual capture form (no API
-      available, so this iframe embed is the submission mechanism).
-      In Systeme, this form's "redirect after submission" should point to
-      the thank-you page (https://www.genovean.com/where-things-stand-thank-you),
-      and that thank-you page should immediately forward the visitor to
-      https://www.genovean.com/where-things-stand?done=1 so this page can
-      pick back up and show the result.
-    -->
-    <div id="systeme-embed-container"></div>
+    <form class="email-form" method="post" action="https://systeme.io/embedded/41820697/subscription">
+      <input type="text" class="email-input" name="first_name" placeholder="First name" required>
+      <input type="email" class="email-input" name="email" placeholder="you@email.com" required>
+      <button type="submit" class="email-submit">See my results</button>
+    </form>
     <p class="email-fineprint">No spam. Unsubscribe any time. Your result is yours either way.</p>
   </div>
 
@@ -740,24 +735,7 @@ function nextQuestion() {
     try { localStorage.setItem('wts_result', computeResult()); } catch (e) {}
 
     document.getElementById('email-gate').classList.remove('hidden');
-    loadSystemeEmbed();
   }
-}
-
-var systemeEmbedLoaded = false;
-
-/* The Systeme.io embed script measures and sizes its iframe when it runs.
-   If it ran while #email-gate was still hidden (display:none), that
-   measurement comes back as 0 and the form never becomes visible. So we
-   load the script only once the email-gate is actually on screen. */
-function loadSystemeEmbed() {
-  if (systemeEmbedLoaded) return;
-  systemeEmbedLoaded = true;
-  var s = document.createElement('script');
-  s.id = 'form-script-tag-24366837';
-  s.src = 'https://www.genovean.com/public/remote/page/416992647ba60456efd6f9aae339278a4e14e5e0.js';
-  s.async = false;
-  document.getElementById('systeme-embed-container').appendChild(s);
 }
 
 function prevQuestion() {

@@ -737,6 +737,15 @@ function nextQuestion() {
       localStorage.setItem('wts_result_ts', Date.now().toString());
     } catch (e) {}
 
+    /* Swap form action based on traffic source */
+    try {
+      var src = localStorage.getItem('wts_source');
+      document.querySelector('.email-form').action =
+        (src === 'blog')
+          ? 'https://systeme.io/embedded/41841925/subscription'
+          : 'https://systeme.io/embedded/41820697/subscription';
+    } catch(e) {}
+
     document.getElementById('email-gate').classList.remove('hidden');
   }
 }
@@ -819,6 +828,7 @@ function checkReturnFromOptIn() {
   try {
     localStorage.removeItem('wts_result');
     localStorage.removeItem('wts_result_ts');
+    localStorage.removeItem('wts_source');
   } catch (e) {}
   return true;
 }
@@ -838,6 +848,20 @@ function resetAll() {
   document.getElementById('quiz-card').classList.remove('hidden');
   renderQuestion();
 }
+
+/* Detect and store traffic source from URL parameter.
+   If no ?source=blog is present, clear any stale source so a
+   direct visit always uses the default (diagnostic) form. */
+(function() {
+  try {
+    var params = new URLSearchParams(window.location.search);
+    if (params.get('source') === 'blog') {
+      localStorage.setItem('wts_source', 'blog');
+    } else {
+      localStorage.removeItem('wts_source');
+    }
+  } catch(e) {}
+})();
 
 if (!checkReturnFromOptIn()) {
   renderQuestion();

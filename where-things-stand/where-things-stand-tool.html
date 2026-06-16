@@ -730,9 +730,12 @@ function nextQuestion() {
     document.getElementById('prog-text').textContent = 'Question ' + questions.length + ' of ' + questions.length;
     document.getElementById('quiz-card').classList.add('hidden');
 
-    /* Save the result now, before the visitor leaves for the Systeme.io
-       opt-in step, so it can be shown when they're sent back here. */
-    try { localStorage.setItem('wts_result', computeResult()); } catch (e) {}
+    /* Save the result and a timestamp before the visitor leaves for the
+       Systeme.io opt-in step. On return, we check both to show the result. */
+    try {
+      localStorage.setItem('wts_result', computeResult());
+      localStorage.setItem('wts_result_ts', Date.now().toString());
+    } catch (e) {}
 
     document.getElementById('email-gate').classList.remove('hidden');
   }
@@ -779,16 +782,30 @@ function renderResult(key) {
   document.querySelector('.course-cta p').textContent = v.courseNote;
 }
 
-/* Called on page load. If the visitor has just come back from the
-   Systeme.io opt-in step (?done=1) and we have a saved result, show it
-   directly instead of starting the quiz over. Returns true if it did so. */
+/* Called on page load. If the visitor just came back from the Systeme.io
+   opt-in step, a result key and timestamp will be in localStorage. We show
+   the result if the key is valid and was set within the last 30 minutes.
+   Note: the ?done=1 URL approach was dropped because the genovean.com →
+   GitHub Pages redirect strips query parameters. */
 function checkReturnFromOptIn() {
-  var params = new URLSearchParams(window.location.search);
-  if (params.get('done') !== '1') return false;
-
   var key = null;
-  try { key = localStorage.getItem('wts_result'); } catch (e) {}
+  var ts = null;
+  try {
+    key = localStorage.getItem('wts_result');
+    ts  = localStorage.getItem('wts_result_ts');
+  } catch (e) {}
+
   if (!key || !variants[key]) return false;
+
+  var age = Date.now() - parseInt(ts || '0', 10);
+  if (age > 30 * 60 * 1000) {
+    /* Key is stale (> 30 min) -- clear it and show start screen. */
+    try {
+      localStorage.removeItem('wts_result');
+      localStorage.removeItem('wts_result_ts');
+    } catch (e) {}
+    return false;
+  }
 
   document.getElementById('start-screen').classList.add('hidden');
   document.getElementById('progress-wrap').classList.add('hidden');
@@ -799,17 +816,20 @@ function checkReturnFromOptIn() {
   document.getElementById('result-panel').classList.remove('hidden');
   document.getElementById('action-bar').classList.remove('hidden');
 
-  try { localStorage.removeItem('wts_result'); } catch (e) {}
-  if (window.history && window.history.replaceState) {
-    window.history.replaceState({}, document.title, window.location.pathname);
-  }
+  try {
+    localStorage.removeItem('wts_result');
+    localStorage.removeItem('wts_result_ts');
+  } catch (e) {}
   return true;
 }
 
 function resetAll() {
   current = 0;
   answers = new Array(questions.length).fill(null);
-  try { localStorage.removeItem('wts_result'); } catch (e) {}
+  try {
+    localStorage.removeItem('wts_result');
+    localStorage.removeItem('wts_result_ts');
+  } catch (e) {}
   document.getElementById('result-panel').classList.add('hidden');
   document.getElementById('action-bar').classList.add('hidden');
   document.getElementById('email-gate').classList.add('hidden');
